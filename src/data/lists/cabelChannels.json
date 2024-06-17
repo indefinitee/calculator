@@ -1,0 +1,46 @@
+[
+  {
+    "code": "М0000016250",
+    "occupancyRate": 144
+  },
+  {
+    "code": "М0000016251",
+    "occupancyRate": 225
+  },
+  {
+    "code": "М0000016252",
+    "occupancyRate": 230
+  },
+  {
+    "code": "М0000016253",
+    "occupancyRate": 360
+  },
+  {
+    "code": "М0000016254",
+    "occupancyRate": 576
+  },
+  {
+    "code": "М0000016255",
+    "occupancyRate": 864
+  },
+  {
+    "code": "М0000016256",
+    "occupancyRate": 1296
+  },
+  {
+    "code": "М0000016257",
+    "occupancyRate": 1120
+  },
+  {
+    "code": "М0000016258",
+    "occupancyRate": 1728
+  },
+  {
+    "code": "М0000016259",
+    "occupancyRate": 1440
+  },
+  {
+    "code": "М0000016260",
+    "occupancyRate": 2160
+  }
+]

@@ -1,0 +1,66 @@
+.header {
+  & .container {
+    height: 50px;
+    padding-left: 15px;
+    padding-right: 20px;
+    background-color: $color-dark;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-size: 14px;
+    line-height: 1.2;
+    color: $color-grey-dark;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__btn {
+    border: none;
+    border-radius: 5px;
+    color: $color-white;
+    width: 170px;
+    height: 30px;
+    transition: all 0.2s;
+
+    &--calc {
+      background-color: $color-red;
+      &:hover {
+        background-color: $color-white;
+        color: $color-red;
+      }
+    }
+
+    &--line {
+      background-color: $color-green;
+      &:hover {
+        background-color: $color-white;
+        color: $color-green;
+      }
+    }
+  }
+
+  @include respond(tab-land) {
+    &__title {
+      font-size: 12px;
+    }
+    &__btn {
+      font-size: 14px;
+      width: 140px;
+      height: 25px;
+    }
+  }
+  @include respond(phone) {
+    &__btn {
+      font-size: 10px;
+      width: 90px;
+      height: 22px;
+    }
+  }
+}

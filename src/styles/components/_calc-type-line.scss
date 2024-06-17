@@ -1,0 +1,123 @@
+.calc-type {
+  list-style: none;
+  align-items: center;
+  display: grid;
+
+  &__header {
+    min-width: 89px;
+  }
+
+  &__title {
+    font-size: 12px;
+    line-height: 1.2;
+    color: $color-grey-dark;
+    white-space: nowrap;
+  }
+
+  &-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  &-text {
+    font-size: 10px;
+    color: $color-white;
+    line-height: 1.2;
+    text-align: center;
+    display: block;
+    border-radius: 5px;
+    padding: 1px 8px;
+  }
+  &-input {
+    width: 14px;
+    height: 14px;
+    accent-color: grey;
+
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.15));
+  }
+
+  &--1 {
+    grid-template-columns: repeat(4, 150px);
+    row-gap: 20px;
+
+    .calc-type-item {
+      .calc-type-text {
+        max-width: 85px;
+        min-width: 70px;
+      }
+
+      &:nth-child(1) {
+        & .calc-type-text {
+          background-color: $color-green;
+        }
+      }
+      &:nth-child(2) {
+        & .calc-type-text {
+          background-color: $color-orange;
+        }
+      }
+      &:nth-child(3) {
+        & .calc-type-text {
+          background-color: $color-blue-light;
+        }
+      }
+      &:nth-child(4) {
+        & .calc-type-text {
+          background-color: $color-blue;
+        }
+      }
+      // этого случая нет в макете
+      &:nth-child(n + 5) {
+        & .calc-type-text {
+          background-color: $color-blue;
+        }
+      }
+    }
+  }
+  &--2 {
+    grid-template-columns: repeat(2, 300px);
+    row-gap: 20px;
+
+    .calc-type-item {
+      .calc-type-text {
+        max-width: 170px;
+        width: 100%;
+      }
+      &:nth-child(1) {
+        & .calc-type-text {
+          background-color: $color-green;
+        }
+      }
+      &:nth-child(2) {
+        & .calc-type-text {
+          background-color: $color-blue-light;
+        }
+      }
+      // этого случая нет в макете
+      &:nth-child(n + 3) {
+        & .calc-type-text {
+          background-color: $color-blue;
+        }
+      }
+    }
+  }
+
+  @include respond(tab-port) {
+    &--1 {
+      grid-template-columns: repeat(3, 150px);
+    }
+    &--2 {
+      grid-template-columns: repeat(2, 250px);
+    }
+  }
+
+  @include respond(phone) {
+    &--1 {
+      grid-template-columns: repeat(1, 150px);
+    }
+    &--2 {
+      grid-template-columns: repeat(1, 150px);
+    }
+  }
+}

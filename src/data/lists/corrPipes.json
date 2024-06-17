@@ -1,0 +1,32 @@
+[
+  {
+    "size": 16,
+    "code": "М0000212040",
+    "occupancyRate": 57.0
+  },
+  {
+    "size": 20,
+    "code": "М0000212041",
+    "occupancyRate": 100.4
+  },
+  {
+    "size": 25,
+    "code": "М0000212042",
+    "occupancyRate": 170.0
+  },
+  {
+    "size": 32,
+    "code": "М0000212043",
+    "occupancyRate": 289.7
+  },
+  {
+    "size": 40,
+    "code": "М0000212044",
+    "occupancyRate": 482.3
+  },
+  {
+    "size": 50,
+    "code": "М0000212045",
+    "occupancyRate": 799.5
+  }
+]

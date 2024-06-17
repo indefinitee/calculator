@@ -1,0 +1,39 @@
+.container {
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.flex {
+  display: flex;
+
+  &-wrap {
+    flex-wrap: wrap;
+  }
+
+  &-col {
+    flex-direction: column;
+  }
+  &-center {
+    align-items: center;
+  }
+}
+
+.grid {
+  display: grid;
+}
+
+.gap-4 {
+  gap: 4px;
+}
+
+.min-w-800 {
+  // min-width: 800px;
+}

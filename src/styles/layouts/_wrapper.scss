@@ -1,0 +1,10 @@
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+
+  @include respond(tab-land) {
+    justify-content: start;
+    align-items: center;
+    flex-direction: column-reverse;
+  }
+}
