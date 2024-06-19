@@ -3,3 +3,15 @@
   line-height: 1.2;
   cursor: pointer;
 }
+
+.mobile-btn {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 5;
+
+  @include respond(tab-land) {
+    display: block;
+  }
+}

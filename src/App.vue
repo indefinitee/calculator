@@ -24,6 +24,9 @@ const calcStore = useCalcStore()
       </div>
       <ResultSidebar />
     </div>
+    <div class="mobile-btn">
+      <app-scroll-top icon="pi pi-arrow-up"></app-scroll-top>
+    </div>
   </div>
 </template>
 

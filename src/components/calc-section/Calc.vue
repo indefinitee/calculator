@@ -4,7 +4,7 @@ import CableGroup from '@/components/cable-group/CableGroup.vue'
 import CalcType from '@/components/calc-type-line/CalcType.vue'
 import types from '@/data/types/types.json'
 import { useCalcStore } from '@/stores/calc'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   title: String,
@@ -32,7 +32,6 @@ const handleMainTypeChange = (type, value) => {
   if (type === 'montage') {
     selectedMontageType.value = value
   }
-  console.log(selectedMainType.value, selectedMontageType.value)
 }
 
 const removeGroup = (id) => {

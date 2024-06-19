@@ -6,12 +6,3 @@ export const scrollToDown = (elem) => {
     })
   }
 }
-
-export const scrollToUp = (elem) => {
-  if (elem) {
-    elem.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    })
-  }
-}

@@ -1,6 +1,21 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+const initialCalculator = {
+  id: 1,
+  selectedOkl: null,
+  selectedInstall: null,
+  secondaryTypes: [],
+  groups: [
+    {
+      id: 1,
+      name: null,
+      elements: []
+    }
+  ],
+  results: {}
+}
+
 export const useCalcStore = defineStore('calc', () => {
   const calculator = ref([
     {
@@ -18,6 +33,7 @@ export const useCalcStore = defineStore('calc', () => {
       results: {}
     }
   ])
+
   const nextId = ref(2)
 
   const removeCalc = (id) => {
@@ -30,13 +46,23 @@ export const useCalcStore = defineStore('calc', () => {
     }
   }
 
+  const updateCalc = (calculatorList) => {
+    calculator.value = calculatorList
+  }
+
   const addCalc = () => {
     calculator.value.push({
       id: nextId.value,
       selectedOkl: null,
       selectedInstall: null,
       secondaryTypes: [],
-      groups: [],
+      groups: [
+        {
+          id: 1,
+          name: null,
+          elements: []
+        }
+      ],
       results: {}
     })
     nextId.value++
@@ -45,16 +71,11 @@ export const useCalcStore = defineStore('calc', () => {
   const clearCalc = () => {
     calculator.value = [
       {
-        id: 1,
-        selectedOkl: null,
-        selectedInstall: null,
-        secondaryTypes: [],
-        groups: [],
-        results: {}
+        ...initialCalculator
       }
     ]
     nextId.value = 2
   }
 
-  return { calculator, nextId, removeCalc, clearCalc, addCalc }
+  return { calculator, nextId, removeCalc, clearCalc, addCalc, updateCalc }
 })
