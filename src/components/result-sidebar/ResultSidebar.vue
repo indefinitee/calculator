@@ -30,7 +30,7 @@ const alertFunc = () => {
     </div>
 
     <div class="sidebar__buttons">
-      <button @click="alertFunc" class="btn sidebar__btn sidebar__btn--print">Печать</button>
+      <button @click="alertFunc" class="btn sidebar__btn sidebar__btn--print">Создать PDF</button>
       <button @click="alertFunc" class="btn sidebar__btn sidebar__btn--save">Сохранить</button>
       <button @click="alertFunc" class="btn sidebar__btn sidebar__btn--load">Загрузить</button>
     </div>

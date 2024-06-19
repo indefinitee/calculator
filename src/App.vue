@@ -4,21 +4,22 @@ import Header from './components/header/Header.vue'
 import ResultSidebar from './components/result-sidebar/ResultSidebar.vue'
 
 import { useCalcStore } from '@/stores/calc'
+import { ref } from 'vue'
 
+const calcContainer = ref(null)
 const calcStore = useCalcStore()
 </script>
 
 <template>
   <div class="container">
-    <Header @clearAll="calcStore.clearCalc(calcStore.calculator)" />
+    <Header :calcContainer="calcContainer" />
     <div class="wrapper relative">
-      <div class="flex flex-col gap-4 min-w-800 relative">
+      <div ref="calcContainer" class="flex flex-col gap-4 min-w-800 relative">
         <Calc
           v-for="item in calcStore.calculator"
           :key="item.id"
           :id="item.id"
           :title="'Линия #' + item.id"
-          @removeCalculator="calcStore.removeCalc(item.id)"
         />
       </div>
       <ResultSidebar />

@@ -7,10 +7,17 @@ export const useCalcStore = defineStore('calc', () => {
       id: 1,
       selectedOkl: null,
       selectedInstall: null,
+      secondaryTypes: [],
+      groups: [
+        {
+          id: 1,
+          name: null,
+          elements: []
+        }
+      ],
       results: {}
     }
   ])
-
   const nextId = ref(2)
 
   const removeCalc = (id) => {
@@ -28,6 +35,8 @@ export const useCalcStore = defineStore('calc', () => {
       id: nextId.value,
       selectedOkl: null,
       selectedInstall: null,
+      secondaryTypes: [],
+      groups: [],
       results: {}
     })
     nextId.value++
@@ -39,10 +48,12 @@ export const useCalcStore = defineStore('calc', () => {
         id: 1,
         selectedOkl: null,
         selectedInstall: null,
+        secondaryTypes: [],
+        groups: [],
         results: {}
       }
     ]
-    nextId.value = 1
+    nextId.value = 2
   }
 
   return { calculator, nextId, removeCalc, clearCalc, addCalc }

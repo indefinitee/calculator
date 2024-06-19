@@ -1,12 +1,30 @@
 <script setup>
+import { useCalcStore } from '@/stores/calc'
+import { toRefs } from 'vue'
 import TypeRadio from '../type-radio/TypeRadio.vue'
 
-defineProps({
+const calcStore = useCalcStore()
+
+const { calculator } = toRefs(calcStore)
+
+const props = defineProps({
   title: String,
   radioButtons: Array,
   radioName: String,
-  typeClass: String
+  typeClass: String,
+  calcId: Number
 })
+
+const updateSelected = (value) => {
+  const calc = calculator.value.find((c) => c.id === props.calcId)
+  if (calc) {
+    if (props.radioName === 'okl') {
+      calc.selectedOkl = value
+    } else if (props.radioName === 'install') {
+      calc.selectedInstall = value
+    }
+  }
+}
 </script>
 
 <template>
@@ -20,6 +38,7 @@ defineProps({
         :key="index"
         :name="item"
         :radioName="radioName"
+        @update:selected="updateSelected"
       />
     </ul>
   </div>

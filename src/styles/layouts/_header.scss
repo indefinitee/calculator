@@ -1,4 +1,7 @@
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
   & .container {
     height: 50px;
     padding-left: 15px;
@@ -52,15 +55,23 @@
     }
     &__btn {
       font-size: 14px;
-      width: 140px;
-      height: 25px;
+      width: 130px;
+      height: 28px;
     }
   }
   @include respond(phone) {
     &__btn {
       font-size: 10px;
-      width: 90px;
-      height: 22px;
+      width: 80px;
+      height: 18px;
+    }
+
+    &__title {
+      font-size: 10px;
+    }
+
+    & .container {
+      height: 30px;
     }
   }
 }
