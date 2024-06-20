@@ -51,7 +51,7 @@ onBeforeUnmount(() => {
     <div class="mobile-btn">
       <app-scroll-top icon="pi pi-arrow-up"></app-scroll-top>
     </div>
-    <app-toast></app-toast>
+    <app-toast z-index="999"></app-toast>
   </div>
 </template>
 

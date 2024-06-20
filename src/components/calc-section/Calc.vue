@@ -63,7 +63,7 @@ const selectedBracket = computed(() => calcStore.getSelectedBracket(props.id))
         :typeClass="'calc-type--' + item.type"
         :radioButtons="item.elements"
         :radioName="item.name"
-        :selectedValue="item.name === 'okl' ? selectedOkl : selectedMontage"
+        :selectedValue="item.name === 'selectedOkl' ? selectedOkl : selectedMontage"
         @change="handleTypeChange(item.name, $event)"
       />
 
