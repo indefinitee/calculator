@@ -11,19 +11,13 @@ const props = defineProps({
   id: Number
 })
 
-const groups = ref([
-  {
-    id: 1,
-    name: null,
-    elements: []
-  }
-])
-
 const calcStore = useCalcStore()
+
+const calc = computed(() => calcStore.calculator.find((item) => item.id === props.id))
 
 const calcTypes = ref(types)
 
-const calc = computed(() => calcStore.calculator.find((item) => item.id === props.id))
+const groups = toRef(calc.value, 'groups')
 
 const selectedSecondaryComponent = computed(() => {
   if (selectedOkl.value === 'ТГТ' || selectedOkl.value === 'ТГ FRHF') {
@@ -99,8 +93,10 @@ const selectedBracket = toRef(calc.value, 'selectedBracket')
       <CableGroup
         v-for="(group, id) in groups"
         :key="group.id"
+        :groupId="group.id"
         :title="'Группа #' + (id + 1) + ' / ' + selectedMainTypeName"
         :selectedOkl="selectedOkl"
+        :calcId="props.id"
         @removeGroup="removeGroup(group.id)"
       />
     </div>

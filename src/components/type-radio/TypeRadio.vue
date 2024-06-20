@@ -1,8 +1,5 @@
 <script setup>
-import { useCalcStore } from '@/stores/calc'
 import { ref, watch } from 'vue'
-
-const calcStore = useCalcStore()
 
 const props = defineProps({
   name: String,

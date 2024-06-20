@@ -1,24 +1,10 @@
+import { initialCalculator } from '@/data/constants/initialState'
+import { cloneDeep } from 'lodash'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-const initialCalculator = {
-  id: 1,
-  selectedOkl: null,
-  selectedMontage: null,
-  selectedBracket: null,
-  secondaryTypes: [],
-  groups: [
-    {
-      id: 1,
-      name: null,
-      elements: []
-    }
-  ],
-  results: []
-}
-
 export const useCalcStore = defineStore('calc', () => {
-  const calculator = ref([{ ...initialCalculator }])
+  const calculator = ref(cloneDeep(initialCalculator))
 
   const results = ref([])
 
@@ -53,7 +39,14 @@ export const useCalcStore = defineStore('calc', () => {
         {
           id: 1,
           name: null,
-          elements: []
+          totalSection: 0,
+          elements: [
+            {
+              id: 1,
+              section: 0,
+              length: 0
+            }
+          ]
         }
       ],
       results: []
@@ -61,11 +54,7 @@ export const useCalcStore = defineStore('calc', () => {
   }
 
   const clearCalc = () => {
-    calculator.value = [
-      {
-        ...initialCalculator
-      }
-    ]
+    calculator.value = cloneDeep(initialCalculator)
   }
 
   return { calculator, calcLength, results, nextId, removeCalc, clearCalc, addCalc, updateCalc }

@@ -5,12 +5,15 @@ import { ref, watch } from 'vue'
 
 const props = defineProps({
   id: Number,
-  initialSection: Number
+  initialSection: Number,
+  initialLength: Number
 })
 
-const emits = defineEmits(['remove', 'updateSection'])
+const emits = defineEmits(['remove', 'updateSection', 'updateLength'])
 
 const section = ref(props.initialSection)
+
+const length = ref(props.initialLength)
 
 const options = ref(cableTypes)
 
@@ -18,9 +21,9 @@ watch(section, (newValue) => {
   emits('updateSection', props.id, newValue)
 })
 
-const removeLine = () => {
-  emits('remove')
-}
+watch(length, (newValue) => {
+  emits('updateLength', props.id, newValue)
+})
 </script>
 
 <template>
@@ -34,11 +37,11 @@ const removeLine = () => {
       </select>
       <label class="cable-line__label">
         <span>Длина линии</span>
-        <input type="number" min="0" class="cable-line__input" @change="" />
+        <input type="number" min="0" class="cable-line__input" v-model.number="length" />
         <span>м.</span>
       </label>
     </div>
-    <button @click="removeLine" class="btn cable-line__btn">
+    <button @click="emits('remove')" class="btn cable-line__btn">
       <img :src="removeIcon" alt="removeIcon" />
     </button>
   </div>
