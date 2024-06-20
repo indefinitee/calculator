@@ -4,33 +4,47 @@ import CableGroup from '@/components/cable-group/CableGroup.vue'
 import CalcType from '@/components/calc-type-line/CalcType.vue'
 import types from '@/data/types/types.json'
 import { useCalcStore } from '@/stores/calc'
-import { computed, ref } from 'vue'
+import { computed, ref, toRef } from 'vue'
 
 const props = defineProps({
   title: String,
   id: Number
 })
 
-const groups = ref([{ id: 1 }])
+const groups = ref([
+  {
+    id: 1,
+    name: null,
+    elements: []
+  }
+])
+
 const calcStore = useCalcStore()
 
 const calcTypes = ref(types)
-const selectedMainType = ref(null)
-const selectedMontageType = ref(null)
 
 const selectedSecondaryComponent = computed(() => {
-  if (selectedMainType.value === 'ТГТ' || selectedMainType.value === 'ТГ FRHF') {
+  if (selectedOkl.value === 'ТГТ' || selectedOkl.value === 'ТГ FRHF') {
     return calcTypes.value.secondary.find((item) => item.name === 'bracket')
   }
   return null
 })
 
-const handleMainTypeChange = (type, value) => {
-  if (type === 'okl') {
-    selectedMainType.value = value
-  }
-  if (type === 'montage') {
-    selectedMontageType.value = value
+const selectedMainTypeName = computed(() => {
+  return selectedOkl.value ? selectedOkl.value : 'Не выбран тип ОКЛ'
+})
+
+const handleTypeChange = (type, value) => {
+  switch (type) {
+    case 'okl':
+      selectedOkl.value = value
+      break
+    case 'montage':
+      selectedMontage.value = value
+      break
+    case 'bracket':
+      selectedBracket.value = value
+      break
   }
 }
 
@@ -39,6 +53,19 @@ const removeGroup = (id) => {
     groups.value = groups.value.filter((group) => group.id !== id)
   }
 }
+
+const selectedOkl = toRef(
+  calcStore.calculator.find((item) => item.id === props.id),
+  'selectedOkl'
+)
+const selectedMontage = toRef(
+  calcStore.calculator.find((item) => item.id === props.id),
+  'selectedMontage'
+)
+const selectedBracket = toRef(
+  calcStore.calculator.find((item) => item.id === props.id),
+  'selectedBracket'
+)
 </script>
 
 <template>
@@ -58,8 +85,9 @@ const removeGroup = (id) => {
         :title="item.title"
         :typeClass="'calc-type--' + item.type"
         :radioButtons="item.elements"
-        :radioName="item.name + props.id"
-        @change="handleMainTypeChange(item.name, $event.target.value)"
+        :radioName="item.name"
+        :selectedValue="item.name === 'okl' ? selectedOkl : selectedMontage"
+        @change="handleTypeChange(item.name, $event)"
       />
 
       <CalcType
@@ -68,7 +96,9 @@ const removeGroup = (id) => {
         :title="selectedSecondaryComponent.title"
         :typeClass="'calc-type--' + selectedSecondaryComponent.type"
         :radioButtons="selectedSecondaryComponent.elements"
-        :radioName="selectedSecondaryComponent.name + props.id"
+        :radioName="selectedSecondaryComponent.name"
+        :selectedValue="selectedBracket"
+        @change="handleTypeChange(selectedSecondaryComponent.name, $event)"
       />
     </div>
 
@@ -76,7 +106,7 @@ const removeGroup = (id) => {
       <CableGroup
         v-for="(group, id) in groups"
         :key="group.id"
-        :title="'Группа #' + (id + 1) + ' / ' + 'Не выбран тип'"
+        :title="'Группа #' + (id + 1) + ' / ' + selectedMainTypeName"
         @removeGroup="removeGroup(group.id)"
       />
     </div>

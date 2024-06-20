@@ -13,6 +13,8 @@
   "dependencies": {
     "@primevue/themes": "^4.0.0-rc.1",
     "bin-packer": "^1.7.0",
+    "jspdf": "^2.5.1",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "primeicons": "^7.0.0",
     "primevue": "^4.0.0-rc.1",

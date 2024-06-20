@@ -56,7 +56,7 @@ const totalSection = computed(() => {
       </p>
     </div>
 
-    <div class="cable-group__list">
+    <TransitionGroup class="cable-group__list" name="cable-list" tag="div">
       <CableLine
         v-for="line in lines"
         :id="line.id"
@@ -65,6 +65,6 @@ const totalSection = computed(() => {
         @remove="removeLine(line.id)"
         @updateTotal="updateSection"
       />
-    </div>
+    </TransitionGroup>
   </div>
 </template>

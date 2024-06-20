@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const initialCalculator = {
   id: 1,
   selectedOkl: null,
-  selectedInstall: null,
+  selectedMontage: null,
+  selectedBracket: null,
   secondaryTypes: [],
   groups: [
     {
@@ -17,33 +18,22 @@ const initialCalculator = {
 }
 
 export const useCalcStore = defineStore('calc', () => {
-  const calculator = ref([
-    {
-      id: 1,
-      selectedOkl: null,
-      selectedInstall: null,
-      secondaryTypes: [],
-      groups: [
-        {
-          id: 1,
-          name: null,
-          elements: []
-        }
-      ],
-      results: {}
-    }
-  ])
+  const calculator = ref([{ ...initialCalculator }])
 
-  const nextId = ref(2)
+  const nextId = computed(() => {
+    if (calcLength.value === 0) {
+      return 1
+    }
+
+    return calculator.value[calculator.value.length - 1].id + 1
+  })
+
+  const calcLength = computed(() => {
+    return calculator.value.length
+  })
 
   const removeCalc = (id) => {
     calculator.value = calculator.value.filter((calc) => calc.id !== id)
-
-    if (calculator.value.length === 0) {
-      nextId.value = 1
-    } else {
-      nextId.value = calculator.value[calculator.value.length - 1].id + 1
-    }
   }
 
   const updateCalc = (calculatorList) => {
@@ -54,7 +44,8 @@ export const useCalcStore = defineStore('calc', () => {
     calculator.value.push({
       id: nextId.value,
       selectedOkl: null,
-      selectedInstall: null,
+      selectedMontage: null,
+      selectedBracket: null,
       secondaryTypes: [],
       groups: [
         {
@@ -65,7 +56,6 @@ export const useCalcStore = defineStore('calc', () => {
       ],
       results: {}
     })
-    nextId.value++
   }
 
   const clearCalc = () => {
@@ -74,8 +64,7 @@ export const useCalcStore = defineStore('calc', () => {
         ...initialCalculator
       }
     ]
-    nextId.value = 2
   }
 
-  return { calculator, nextId, removeCalc, clearCalc, addCalc, updateCalc }
+  return { calculator, calcLength, nextId, removeCalc, clearCalc, addCalc, updateCalc }
 })

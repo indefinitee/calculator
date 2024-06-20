@@ -16,7 +16,7 @@ const props = defineProps({
 })
 
 const showConfirm = () => {
-  if (calcStore.calculator.length) {
+  if (calcStore.calcLength) {
     confirm.require({
       message: 'Вы действительно хотите создать новый расчет?',
       header: 'Подтверждение',

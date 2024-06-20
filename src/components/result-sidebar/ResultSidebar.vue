@@ -1,12 +1,17 @@
 <script setup>
 import { useCalcStore } from '@/stores/calc'
-import { loadCfg, saveCfg } from '@/utils/cfgActions'
+import { createHeaders, createPdf, generateData, loadCfg, saveCfg } from '@/utils/cfgActions'
+import { jsPDF } from 'jspdf'
 import { useToast } from 'primevue/usetoast'
 import { ref } from 'vue'
 
 const toast = useToast()
 
 const calcStore = useCalcStore()
+
+const props = defineProps({
+  updateLoading: Function
+})
 
 const fileInput = ref(null)
 
@@ -17,23 +22,52 @@ const handleFileUpload = async (event) => {
     return toast.add({ severity: 'error', summary: 'Ошибка', detail: 'Файл не выбран', life: 3000 })
   }
 
-  const data = await loadCfg(file)
+  props.updateLoading(true)
 
-  const jsonData = JSON.parse(data)
+  try {
+    const data = await loadCfg(file)
 
-  calcStore.updateCalc(jsonData)
+    const jsonData = JSON.parse(data)
 
-  return toast.add({ severity: 'success', summary: 'Успех', detail: 'Файл загружен', life: 3000 })
+    calcStore.updateCalc(jsonData)
+
+    toast.add({
+      severity: 'success',
+      summary: 'Успех',
+      detail: 'Конфигурация загружена',
+      life: 3000
+    })
+  } catch (error) {
+    toast.add({
+      severity: 'error',
+      summary: 'Ошибка',
+      detail: 'Не удалось загрузить файл',
+      life: 3000
+    })
+  } finally {
+    props.updateLoading(false)
+    fileInput.value.value = null
+  }
 }
 
-const handleFileDownload = (target) => {
-  saveCfg(calcStore.calculator, target)
+const handlePdfCreate = () => {
+  const doc = new jsPDF()
+  doc.setFontSize(10)
 
-  toast.add({ severity: 'success', summary: 'Успех', detail: 'Файл сохранен', life: 3000 })
-}
+  const headers = createHeaders(['id', 'type_okl', 'type_montage', 'cabels', 'result'])
 
-const alertFunc = () => {
-  alert('Пока ничего не происходит')
+  doc.table(
+    1,
+    2,
+    generateData(40, {
+      type_okl: '123',
+      type_montage: '12 3456',
+      cabels: '2X*3',
+      result: '2X*3'
+    }),
+    headers
+  )
+  doc.save('a4.pdf')
 }
 </script>
 
@@ -64,14 +98,18 @@ const alertFunc = () => {
 
     <div class="sidebar__buttons">
       <div class="sidebar__buttons-bottom">
-        <a @click="handleFileDownload($event.target)" class="btn sidebar__btn sidebar__btn--save"
+        <a
+          @click="saveCfg(calcStore.calculator, $event.target)"
+          class="btn sidebar__btn sidebar__btn--save"
           >Сохранить</a
         >
         <button @click="fileInput.click()" class="btn sidebar__btn sidebar__btn--load">
           Загрузить
         </button>
       </div>
-      <button @click="alertFunc" class="btn sidebar__btn sidebar__btn--print">Создать PDF</button>
+      <button @click="handlePdfCreate" class="btn sidebar__btn sidebar__btn--print">
+        Создать PDF
+      </button>
     </div>
     <input type="file" class="hidden" accept=".json" ref="fileInput" @change="handleFileUpload" />
   </aside>
