@@ -4,7 +4,7 @@ import Header from './components/header/Header.vue'
 import ResultSidebar from './components/result-sidebar/ResultSidebar.vue'
 
 import { useCalcStore } from '@/stores/calc'
-import { ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const isLoading = ref(false)
 
@@ -15,6 +15,18 @@ const calcStore = useCalcStore()
 const updateLoading = (value) => {
   isLoading.value = value
 }
+
+const handleBeforeUnload = () => {
+  calcStore.saveCalcToLocalStorage()
+}
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload)
+})
 </script>
 
 <template>

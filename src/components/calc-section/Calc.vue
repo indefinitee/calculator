@@ -21,7 +21,7 @@ const groups = toRef(calc.value, 'groups')
 
 const selectedSecondaryComponent = computed(() => {
   if (selectedOkl.value === 'ТГТ' || selectedOkl.value === 'ТГ FRHF') {
-    return calcTypes.value.secondary.find((item) => item.name === 'bracket')
+    return calcTypes.value.secondary.find((item) => item.name === 'selectedBracket')
   }
   return null
 })
@@ -31,28 +31,18 @@ const selectedMainTypeName = computed(() => {
 })
 
 const handleTypeChange = (type, value) => {
-  switch (type) {
-    case 'okl':
-      selectedOkl.value = value
-      break
-    case 'montage':
-      selectedMontage.value = value
-      break
-    case 'bracket':
-      selectedBracket.value = value
-      break
-  }
+  calcStore.setTypeValue(props.id, type, value)
 }
 
-const removeGroup = (id) => {
+const removeGroup = (groupId) => {
   if (groups.value.length > 1) {
-    groups.value = groups.value.filter((group) => group.id !== id)
+    groups.value = groups.value.filter((group) => group.id !== groupId)
   }
 }
 
-const selectedOkl = toRef(calc.value, 'selectedOkl')
-const selectedMontage = toRef(calc.value, 'selectedMontage')
-const selectedBracket = toRef(calc.value, 'selectedBracket')
+const selectedOkl = computed(() => calcStore.getSelectedOkl(props.id))
+const selectedMontage = computed(() => calcStore.getSelectedMontage(props.id))
+const selectedBracket = computed(() => calcStore.getSelectedBracket(props.id))
 </script>
 
 <template>

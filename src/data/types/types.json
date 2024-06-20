@@ -1,13 +1,13 @@
 {
   "main": [
     {
-      "name": "okl",
+      "name": "selectedOkl",
       "type": 1,
       "title": "Тип ОКЛ",
       "elements": ["ОП", "ТГТ", "КК", "ТГ FRHF"]
     },
     {
-      "name": "montage",
+      "name": "selectedMontage",
       "type": 2,
       "title": "Тип монтажа",
       "elements": ["Прямой монтаж", "Стандартный"]
@@ -15,7 +15,7 @@
   ],
   "secondary": [
     {
-      "name": "bracket",
+      "name": "selectedBracket",
       "type": 1,
       "title": "Тип скобы",
       "elements": ["Однолапковая", "Двухлапковая"]
