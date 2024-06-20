@@ -1,7 +1,7 @@
 <script setup>
 import removeIcon from '@/assets/icons/removeicon.svg'
 import cableTypes from '@/data/lists/cableTypes.json'
-import { ref, watch } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 
 const props = defineProps({
   id: Number,
@@ -16,6 +16,11 @@ const section = ref(props.initialSection)
 const length = ref(props.initialLength)
 
 const options = ref(cableTypes)
+
+watchEffect(() => {
+  section.value = props.initialSection
+  length.value = props.initialLength
+})
 
 watch(section, (newValue) => {
   emits('updateSection', props.id, newValue)
