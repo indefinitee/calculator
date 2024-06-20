@@ -58,7 +58,6 @@ const addNewCalc = async () => {
 </script>
 
 <template>
-  <app-toast></app-toast>
   <header class="header">
     <app-dialog></app-dialog>
     <div class="container">

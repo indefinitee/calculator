@@ -39,6 +39,7 @@ const updateLoading = (value) => {
     <div class="mobile-btn">
       <app-scroll-top icon="pi pi-arrow-up"></app-scroll-top>
     </div>
+    <app-toast></app-toast>
   </div>
 </template>
 

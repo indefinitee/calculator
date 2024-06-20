@@ -52,7 +52,6 @@ const totalSection = computed(() => {
 
 <template>
   <div class="cable-group relative">
-    <app-toast></app-toast>
     <div class="cable-group__header absolute relative">
       <span class="cable-group__header-text">{{ props?.title }}</span>
     </div>
