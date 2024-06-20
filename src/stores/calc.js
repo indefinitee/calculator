@@ -14,11 +14,13 @@ const initialCalculator = {
       elements: []
     }
   ],
-  results: {}
+  results: []
 }
 
 export const useCalcStore = defineStore('calc', () => {
   const calculator = ref([{ ...initialCalculator }])
+
+  const results = ref([])
 
   const nextId = computed(() => {
     if (calcLength.value === 0) {
@@ -54,7 +56,7 @@ export const useCalcStore = defineStore('calc', () => {
           elements: []
         }
       ],
-      results: {}
+      results: []
     })
   }
 
@@ -66,5 +68,5 @@ export const useCalcStore = defineStore('calc', () => {
     ]
   }
 
-  return { calculator, calcLength, nextId, removeCalc, clearCalc, addCalc, updateCalc }
+  return { calculator, calcLength, results, nextId, removeCalc, clearCalc, addCalc, updateCalc }
 })

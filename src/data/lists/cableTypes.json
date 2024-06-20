@@ -1,18 +1,18 @@
 [
   {
     "name": "Кабель 1",
-    "cross-section": 31
+    "crossSection": 31
   },
   {
     "name": "Кабель 2",
-    "cross-section": 16
+    "crossSection": 16
   },
   {
     "name": "Кабель 3",
-    "cross-section": 3
+    "crossSection": 3
   },
   {
     "name": "Кабель 4",
-    "cross-section": 12
+    "crossSection": 12
   }
 ]

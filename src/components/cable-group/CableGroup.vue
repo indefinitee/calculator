@@ -1,10 +1,12 @@
 <script setup>
+import addIcon from '@/assets/icons/addicon.svg'
+import CableLine from '@/components/cable-group-line/CableLine.vue'
+import { useToast } from 'primevue/usetoast'
 import { computed, ref } from 'vue'
-import addIcon from '../../assets/icons/addicon.svg'
-import CableLine from '../cable-group-line/CableLine.vue'
 
 const props = defineProps({
-  title: String
+  title: String,
+  selectedOkl: [String, Object]
 })
 
 const emits = defineEmits(['removeGroup'])
@@ -13,10 +15,20 @@ const initialSectionValue = 0
 
 const lines = ref([{ id: 1, section: initialSectionValue }])
 
-let nextId = 2
+const nextId = ref(2)
+
+const toast = useToast()
 
 const addLine = () => {
-  lines.value.push({ id: nextId++, section: initialSectionValue })
+  if (!props.selectedOkl) {
+    return toast.add({
+      severity: 'warn',
+      summary: 'Предупреждение',
+      detail: 'Не выбран тип ОКЛ в линии',
+      life: 1000
+    })
+  }
+  lines.value.push({ id: nextId.value++, section: initialSectionValue })
 }
 
 const removeLine = (id) => {
@@ -40,6 +52,7 @@ const totalSection = computed(() => {
 
 <template>
   <div class="cable-group relative">
+    <app-toast></app-toast>
     <div class="cable-group__header absolute relative">
       <span class="cable-group__header-text">{{ props?.title }}</span>
     </div>
@@ -63,7 +76,7 @@ const totalSection = computed(() => {
         :key="line.id"
         :initialSection="line.section"
         @remove="removeLine(line.id)"
-        @updateTotal="updateSection"
+        @updateSection="updateSection"
       />
     </TransitionGroup>
   </div>

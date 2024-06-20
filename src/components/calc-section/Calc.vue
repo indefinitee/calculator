@@ -23,6 +23,8 @@ const calcStore = useCalcStore()
 
 const calcTypes = ref(types)
 
+const calc = computed(() => calcStore.calculator.find((item) => item.id === props.id))
+
 const selectedSecondaryComponent = computed(() => {
   if (selectedOkl.value === 'ТГТ' || selectedOkl.value === 'ТГ FRHF') {
     return calcTypes.value.secondary.find((item) => item.name === 'bracket')
@@ -54,18 +56,9 @@ const removeGroup = (id) => {
   }
 }
 
-const selectedOkl = toRef(
-  calcStore.calculator.find((item) => item.id === props.id),
-  'selectedOkl'
-)
-const selectedMontage = toRef(
-  calcStore.calculator.find((item) => item.id === props.id),
-  'selectedMontage'
-)
-const selectedBracket = toRef(
-  calcStore.calculator.find((item) => item.id === props.id),
-  'selectedBracket'
-)
+const selectedOkl = toRef(calc.value, 'selectedOkl')
+const selectedMontage = toRef(calc.value, 'selectedMontage')
+const selectedBracket = toRef(calc.value, 'selectedBracket')
 </script>
 
 <template>
@@ -107,6 +100,7 @@ const selectedBracket = toRef(
         v-for="(group, id) in groups"
         :key="group.id"
         :title="'Группа #' + (id + 1) + ' / ' + selectedMainTypeName"
+        :selectedOkl="selectedOkl"
         @removeGroup="removeGroup(group.id)"
       />
     </div>

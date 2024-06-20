@@ -3,15 +3,17 @@ import { useCalcStore } from '@/stores/calc'
 import { createHeaders, createPdf, generateData, loadCfg, saveCfg } from '@/utils/cfgActions'
 import { jsPDF } from 'jspdf'
 import { useToast } from 'primevue/usetoast'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+
+const props = defineProps({
+  updateLoading: Function
+})
 
 const toast = useToast()
 
 const calcStore = useCalcStore()
 
-const props = defineProps({
-  updateLoading: Function
-})
+const results = computed(() => calcStore.results)
 
 const fileInput = ref(null)
 
@@ -78,21 +80,13 @@ const handlePdfCreate = () => {
     </div>
 
     <div class="sidebar__container">
-      <!--
-      <div class="sidebar__info">
+      <div v-if="!results.length" class="sidebar__info">
+        <p class="sidebar__subtitle">Для получения результатов начните расчет</p>
+      </div>
+      <div v-else class="sidebar__info">
         <p class="sidebar__subtitle">Если ДМОУ-1К/2К/1К-М</p>
         <p class="sidebar__subtitle">Кол-во дюбелей = <span class="sidebar__value">2X*3</span></p>
         <p class="sidebar__subtitle">Кол-во саморезов = <span class="sidebar__value">2X*3</span></p>
-      </div>
-      <div class="sidebar__info">
-        <p class="sidebar__subtitle">Если ДМОУ-С</p>
-        <p class="sidebar__subtitle">Кол-во дюбелей = <span class="sidebar__value">X*3</span></p>
-        <p class="sidebar__subtitle">Кол-во саморезов = <span class="sidebar__value">X*3</span></p>
-        <p class="sidebar__subtitle">Кол-во кабеля = <span class="sidebar__value">X</span></p>
-      </div>
-      -->
-      <div class="sidebar__info">
-        <p class="sidebar__subtitle">Добавьте кабель</p>
       </div>
     </div>
 
