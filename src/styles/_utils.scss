@@ -40,6 +40,10 @@
 
 .pd-40 {
   padding-bottom: 40px;
+
+  @include respond(phone) {
+    padding-bottom: 80px;
+  }
 }
 
 .list-enter-active,
