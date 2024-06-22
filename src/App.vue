@@ -33,7 +33,7 @@ onBeforeUnmount(() => {
   <div class="container">
     <Header :calcContainer="calcContainer" />
     <div class="wrapper relative">
-      <div v-if="!isLoading" ref="calcContainer" class="flex flex-col gap-4 min-w-800 relative">
+      <div v-if="!isLoading" ref="calcContainer" class="flex flex-col gap-4 pd-40 relative">
         <TransitionGroup name="list" tag="div">
           <Calc
             v-for="item in calcStore.calculator"
