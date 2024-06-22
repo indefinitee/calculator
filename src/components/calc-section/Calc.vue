@@ -4,7 +4,7 @@ import CableGroup from '@/components/cable-group/CableGroup.vue'
 import CalcType from '@/components/calc-type-line/CalcType.vue'
 import types from '@/data/types/types.json'
 import { useCalcStore } from '@/stores/calc'
-import { computed, ref, toRef } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 
 const props = defineProps({
   title: String,
@@ -43,6 +43,12 @@ const removeGroup = (groupId) => {
 const selectedOkl = computed(() => calcStore.getSelectedOkl(props.id))
 const selectedMontage = computed(() => calcStore.getSelectedMontage(props.id))
 const selectedBracket = computed(() => calcStore.getSelectedBracket(props.id))
+
+watch(selectedSecondaryComponent, (newValue) => {
+  if (newValue === null) {
+    calcStore.setTypeValue(props.id, 'selectedBracket', null)
+  }
+})
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 
 const props = defineProps({
   title: String,
@@ -28,16 +28,13 @@ watch(
   }
 )
 
-const handleChange = (value) => {
-  emit('change', value)
-}
-
 const handleRadioChange = (event) => {
   const selectedValue = event.target.value
+
   localValues.value.forEach((item) => {
     item.checked = item.name === selectedValue
   })
-  handleChange(selectedValue)
+  emit('change', selectedValue)
 }
 </script>
 

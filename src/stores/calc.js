@@ -12,7 +12,7 @@ export const useCalcStore = defineStore('calc', () => {
     calculator.value = cloneDeep(initialCalculator)
   }
 
-  const results = ref([])
+  const results = computed(() => calculator.value.at(-1).results)
 
   const nextId = computed(() => {
     const lastCalculator = calculator.value.at(-1)
@@ -54,7 +54,7 @@ export const useCalcStore = defineStore('calc', () => {
           ]
         }
       ],
-      results: []
+      results: {}
     })
   }
 
