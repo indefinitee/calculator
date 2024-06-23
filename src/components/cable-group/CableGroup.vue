@@ -3,7 +3,7 @@ import addIcon from '@/assets/icons/addicon.svg'
 import CableLine from '@/components/cable-group-line/CableLine.vue'
 import { useCalcStore } from '@/stores/calc'
 import { useToast } from 'primevue/usetoast'
-import { computed, ref, toRef, watch, watchEffect } from 'vue'
+import { computed, watch } from 'vue'
 
 const props = defineProps({
   calcId: Number,

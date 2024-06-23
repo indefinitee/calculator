@@ -4,6 +4,9 @@ export const initialCalculator = [
     selectedOkl: null,
     selectedMontage: null,
     selectedBracket: null,
+    selectedDowelType: null,
+    selectedDowel: null,
+    selectedScrew: null,
     secondaryTypes: [],
     groups: [
       {

@@ -39,6 +39,9 @@ export const useCalcStore = defineStore('calc', () => {
       selectedOkl: null,
       selectedMontage: null,
       selectedBracket: null,
+      selectedDowelType: null,
+      selectedDowel: null,
+      selectedScrew: null,
       secondaryTypes: [],
       groups: [
         {
@@ -85,6 +88,8 @@ export const useCalcStore = defineStore('calc', () => {
     getSelectedOkl: (id) => getPropertyValue(id, 'selectedOkl'),
     getSelectedMontage: (id) => getPropertyValue(id, 'selectedMontage'),
     getSelectedBracket: (id) => getPropertyValue(id, 'selectedBracket'),
+    getSelectedDowelType: (id) => getPropertyValue(id, 'selectedDowelType'),
+
     setTypeValue
   }
 })

@@ -2,9 +2,12 @@
 import removeIcon from '@/assets/icons/removeicon.svg'
 import CableGroup from '@/components/cable-group/CableGroup.vue'
 import CalcType from '@/components/calc-type-line/CalcType.vue'
+import dowelTypes from '@/data/lists/dowelTypes.json'
+import fastenerTypes from '@/data/lists/fastenerTypes.json'
+import screwTypes from '@/data/lists/screwTypes.json'
 import types from '@/data/types/types.json'
 import { useCalcStore } from '@/stores/calc'
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, toRef, watch } from 'vue'
 
 const props = defineProps({
   title: String,
@@ -15,13 +18,18 @@ const calcStore = useCalcStore()
 
 const calc = computed(() => calcStore.calculator.find((item) => item.id === props.id))
 
-const calcTypes = ref(types)
-
 const groups = toRef(calc.value, 'groups')
+
+const selectedOkl = computed(() => calcStore.getSelectedOkl(props.id))
+const selectedMontage = computed(() => calcStore.getSelectedMontage(props.id))
+const selectedBracket = computed(() => calcStore.getSelectedBracket(props.id))
+const selectedDowelType = computed(() => calcStore.getSelectedDowelType(props.id))
+const selectedDowel = toRef(calc.value, 'selectedDowel')
+const selectedScrew = toRef(calc.value, 'selectedScrew')
 
 const selectedSecondaryComponent = computed(() => {
   if (selectedOkl.value === 'ТГТ' || selectedOkl.value === 'ТГ FRHF') {
-    return calcTypes.value.secondary.find((item) => item.name === 'selectedBracket')
+    return types.secondary.find((item) => item.name === 'selectedBracket')
   }
   return null
 })
@@ -39,10 +47,6 @@ const removeGroup = (groupId) => {
     groups.value = groups.value.filter((group) => group.id !== groupId)
   }
 }
-
-const selectedOkl = computed(() => calcStore.getSelectedOkl(props.id))
-const selectedMontage = computed(() => calcStore.getSelectedMontage(props.id))
-const selectedBracket = computed(() => calcStore.getSelectedBracket(props.id))
 
 watch(selectedSecondaryComponent, (newValue) => {
   if (newValue === null) {
@@ -62,7 +66,7 @@ watch(selectedSecondaryComponent, (newValue) => {
 
     <div class="calc-type-container">
       <CalcType
-        v-for="(item, id) in calcTypes.main"
+        v-for="(item, id) in types.main"
         :key="id"
         :calcId="props.id"
         :title="item.title"
@@ -83,6 +87,34 @@ watch(selectedSecondaryComponent, (newValue) => {
         :selectedValue="selectedBracket"
         @change="handleTypeChange(selectedSecondaryComponent.name, $event)"
       />
+
+      <template v-if="selectedMontage === 'Стандартный'">
+        <CalcType
+          :calcId="props.id"
+          :title="'Тип крепежа'"
+          :typeClass="'calc-type--2'"
+          :radioButtons="fastenerTypes.elements"
+          :radioName="fastenerTypes.name"
+          :selectedValue="selectedDowelType"
+          @change="handleTypeChange(fastenerTypes.name, $event)"
+        />
+
+        <div class="calc-type__select-container">
+          <select class="cable-line__select" v-model="selectedDowel">
+            <option disabled :value="null">Выберите тип дюбеля</option>
+            <option v-for="(option, id) in dowelTypes" :key="id" :value="option.code">
+              {{ option.title + ' ' + '(Код' + ' ' + option.code + ')' }}
+            </option>
+          </select>
+
+          <select class="cable-line__select" v-model="selectedScrew">
+            <option disabled :value="null">Выберите тип самореза</option>
+            <option v-for="(option, id) in screwTypes" :key="id" :value="option.code">
+              {{ option.title + ' ' + '(Код' + ' ' + option.code + ')' }}
+            </option>
+          </select>
+        </div>
+      </template>
     </div>
 
     <div class="calc-group-container">

@@ -37,6 +37,11 @@
     filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.15));
   }
 
+  &__select-container {
+    display: flex;
+    gap: 25px;
+  }
+
   &--1 {
     grid-template-columns: repeat(4, 150px);
     row-gap: 20px;
@@ -113,6 +118,9 @@
   }
 
   @include respond(phone) {
+    &__select-container {
+      flex-direction: column;
+    }
     &--1 {
       grid-template-columns: repeat(1, 150px);
     }

@@ -10,12 +10,16 @@
   }
 
   &__select {
-    width: 390px;
+    width: 100%;
     padding: 5px 5px;
     border: 1px solid $color-grey-light;
     border-radius: 5px;
     font-size: 16px;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.04);
+
+    &-wrapper {
+      width: 390px;
+    }
   }
 
   &__input {
@@ -56,7 +60,7 @@
   }
 
   @include respond(tab-land) {
-    &__select {
+    &__select-wrapper {
       width: 350px;
       font-size: 14px;
     }
@@ -67,7 +71,7 @@
   }
 
   @include respond(tab-port) {
-    &__select {
+    &__select-wrapper {
       width: 250px;
       font-size: 12px;
     }
@@ -89,7 +93,7 @@
       align-items: center;
     }
 
-    &__select {
+    &__select-wrapper {
       width: 200px;
       font-size: 10px;
     }
