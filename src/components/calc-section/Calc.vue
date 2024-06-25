@@ -14,9 +14,11 @@ const props = defineProps({
   id: Number
 })
 
+const emits = defineEmits(['updateResults'])
+
 const calcStore = useCalcStore()
 
-const calc = computed(() => calcStore.calculator.find((item) => item.id === props.id))
+const calc = computed(() => calcStore.calculator.get(props.id))
 
 const groups = toRef(calc.value, 'groups')
 
@@ -29,7 +31,7 @@ const selectedScrew = toRef(calc.value, 'selectedScrew')
 
 const selectedSecondaryComponent = computed(() => {
   if (selectedOkl.value === 'ТГТ' || selectedOkl.value === 'ТГ FRHF') {
-    return types.secondary.find((item) => item.name === 'selectedBracket')
+    return types.secondary
   }
   return null
 })
@@ -50,6 +52,7 @@ const removeGroup = (groupId) => {
 
 watch(selectedSecondaryComponent, (newValue) => {
   if (newValue === null) {
+    emits('updateResults')
     calcStore.setTypeValue(props.id, 'selectedBracket', null)
   }
 })

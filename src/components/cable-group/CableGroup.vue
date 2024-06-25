@@ -18,7 +18,7 @@ const calcStore = useCalcStore()
 
 const initialCrossSection = 0
 
-const calc = computed(() => calcStore.calculator.find((item) => item.id === props.calcId))
+const calc = computed(() => calcStore.calculator.get(props.calcId))
 
 const group = computed(() => calc.value.groups.find((group) => group.id === props.groupId))
 

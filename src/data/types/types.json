@@ -13,12 +13,10 @@
       "elements": ["Прямой монтаж", "Стандартный"]
     }
   ],
-  "secondary": [
-    {
-      "name": "selectedBracket",
-      "type": 1,
-      "title": "Тип скобы",
-      "elements": ["Однолапковая", "Двухлапковая"]
-    }
-  ]
+  "secondary": {
+    "name": "selectedBracket",
+    "type": 1,
+    "title": "Тип скобы",
+    "elements": ["Однолапковая", "Двухлапковая"]
+  }
 }

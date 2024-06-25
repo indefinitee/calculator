@@ -1,6 +1,7 @@
 <script setup>
+import '@/assets/fonts/TimesNewRoman-normal'
 import { useCalcStore } from '@/stores/calc'
-import { createHeaders, createPdf, generateData, loadCfg, saveCfg } from '@/utils/cfgActions'
+import { loadCfg, saveCfg } from '@/utils/cfgActions'
 import { jsPDF } from 'jspdf'
 import { useToast } from 'primevue/usetoast'
 import { computed, ref } from 'vue'
@@ -52,24 +53,71 @@ const handleFileUpload = async (event) => {
   }
 }
 
-const handlePdfCreate = () => {
+// Пример данных
+const exampleData = [
+  { name: 'КПСнг(А)-FRLS 1x2x0,75 (200м) ЭНТЭ', unit: 'м', quantity: 1000 },
+  {
+    name: 'Труба гофр. тяжелая самозатух. ТГТ СЗ ПВХ 16 мм с зондом (100 м) ПожТехКабель (710-001)',
+    unit: 'м',
+    quantity: 1000
+  },
+  {
+    name: 'Скоба металлическая однолапковая 16-17 мм (100 шт/уп) ПожТехКабель PTK-Accessories (850-004)',
+    unit: 'м',
+    quantity: 3000
+  },
+  {
+    name: 'Саморез 3,5x35 мм (1000 шт/уп) ПожТехКабель PTK-Accessories (860-005)',
+    unit: 'шт',
+    quantity: 3000
+  },
+  {
+    name: 'Дюбель металлический 5х30мм (500 шт/уп) ПожТехКабель PTK-Accessories (861-005)',
+    unit: 'шт',
+    quantity: 3000
+  }
+]
+
+const handlePdfCreate = (data) => {
   const doc = new jsPDF()
-  doc.setFontSize(10)
 
-  const headers = createHeaders(['id', 'type_okl', 'type_montage', 'cabels', 'result'])
+  doc.setFont('TimesNewRoman')
 
-  doc.table(
-    1,
-    2,
-    generateData(40, {
-      type_okl: '123',
-      type_montage: '12 3456',
-      cabels: '2X*3',
-      result: '2X*3'
-    }),
-    headers
-  )
-  doc.save('a4.pdf')
+  // Title
+  doc.setFontSize(18)
+  doc.text('Пожтехкабель PTK-Line', 10, 10)
+
+  // Subtitle
+  doc.setFontSize(14)
+  doc.text('Комплектность', 10, 20)
+
+  // Table
+  const startX = 10
+  const startY = 30
+  const cellHeight = 10
+
+  // Headers
+  doc.setFontSize(12)
+  doc.text('№', startX, startY)
+  doc.text('Наименование', startX + 20, startY)
+  doc.text('Ед. Изм.', startX + 120, startY)
+  doc.text('Кол-во', startX + 150, startY)
+
+  // Table data
+  data.forEach((row, index) => {
+    const y = startY + (index + 1) * cellHeight
+    doc.text(String(index + 1), startX, y)
+    doc.text(row.name, startX + 20, y)
+    doc.text(row.unit, startX + 120, y)
+    doc.text(String(row.quantity), startX + 150, y)
+  })
+
+  // Contact info
+  const contactY = startY + (data.length + 1) * cellHeight + 10
+  doc.text('E-mail: support@layta.ru', startX, contactY)
+  doc.text('Тел.: 8 (800) 775-30-00', startX, contactY + 10)
+
+  doc.save('output.pdf')
 }
 </script>
 
@@ -81,7 +129,9 @@ const handlePdfCreate = () => {
 
     <div class="sidebar__container">
       <div v-if="!results.length" class="sidebar__info">
-        <p class="sidebar__subtitle">Для получения результатов начните расчет</p>
+        <p class="sidebar__subtitle">
+          Автоматический расчет начнется после указания всех соответствующих характеристик
+        </p>
       </div>
       <div v-else class="sidebar__info">
         <p class="sidebar__subtitle">Если ДМОУ-1К/2К/1К-М</p>
@@ -101,7 +151,7 @@ const handlePdfCreate = () => {
           Загрузить
         </button>
       </div>
-      <button @click="handlePdfCreate" class="btn sidebar__btn sidebar__btn--print">
+      <button @click="handlePdfCreate(exampleData)" class="btn sidebar__btn sidebar__btn--print">
         Создать PDF
       </button>
     </div>

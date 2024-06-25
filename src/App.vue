@@ -20,6 +20,10 @@ const handleBeforeUnload = () => {
   calcStore.saveCalcToLocalStorage()
 }
 
+const alertTest = () => {
+  alert('Обновление')
+}
+
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
 })
@@ -36,10 +40,11 @@ onBeforeUnmount(() => {
       <div v-if="!isLoading" ref="calcContainer" class="flex flex-col gap-4 pd-40 relative">
         <TransitionGroup name="list">
           <Calc
-            v-for="item in calcStore.calculator"
-            :key="item.id"
-            :id="item.id"
-            :title="'Линия #' + item.id"
+            v-for="[key] in calcStore.calculator"
+            :key="key"
+            :id="key"
+            :title="'Линия #' + key"
+            @updateResults="alertTest"
           />
         </TransitionGroup>
       </div>
