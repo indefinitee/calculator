@@ -4,7 +4,7 @@
       "name": "selectedOkl",
       "type": 1,
       "title": "Тип ОКЛ",
-      "elements": ["ОП", "ТГТ", "КК", "ТГ FRHF"]
+      "elements": ["ОП", "ТГТ СЗ", "КК", "ТГ FRHF"]
     },
     {
       "name": "selectedMontage",

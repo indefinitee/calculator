@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   title: String,

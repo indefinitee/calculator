@@ -1,8 +1,10 @@
 <script setup>
 import '@/assets/fonts/TimesNewRoman-normal'
+
 import { useCalcStore } from '@/stores/calc'
-import { loadCfg, saveCfg } from '@/utils/cfgActions'
+import { exampleData, loadCfg, saveCfg } from '@/utils/cfgActions'
 import { jsPDF } from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import { useToast } from 'primevue/usetoast'
 import { computed, ref } from 'vue'
 
@@ -14,7 +16,15 @@ const toast = useToast()
 
 const calcStore = useCalcStore()
 
-const results = computed(() => calcStore.results)
+const results = computed(() => {
+  const allResults = []
+  calcStore.calculator.forEach((calc, id) => {
+    if (calc.results && Object.keys(calc.results).length > 0) {
+      allResults.push({ id, results: calc.results })
+    }
+  })
+  return allResults
+})
 
 const fileInput = ref(null)
 
@@ -30,7 +40,7 @@ const handleFileUpload = async (event) => {
   try {
     const data = await loadCfg(file)
 
-    const jsonData = JSON.parse(data)
+    const jsonData = new Map(JSON.parse(data))
 
     calcStore.updateCalc(jsonData)
 
@@ -49,34 +59,10 @@ const handleFileUpload = async (event) => {
     })
   } finally {
     props.updateLoading(false)
+
     fileInput.value.value = null
   }
 }
-
-// Пример данных
-const exampleData = [
-  { name: 'КПСнг(А)-FRLS 1x2x0,75 (200м) ЭНТЭ', unit: 'м', quantity: 1000 },
-  {
-    name: 'Труба гофр. тяжелая самозатух. ТГТ СЗ ПВХ 16 мм с зондом (100 м) ПожТехКабель (710-001)',
-    unit: 'м',
-    quantity: 1000
-  },
-  {
-    name: 'Скоба металлическая однолапковая 16-17 мм (100 шт/уп) ПожТехКабель PTK-Accessories (850-004)',
-    unit: 'м',
-    quantity: 3000
-  },
-  {
-    name: 'Саморез 3,5x35 мм (1000 шт/уп) ПожТехКабель PTK-Accessories (860-005)',
-    unit: 'шт',
-    quantity: 3000
-  },
-  {
-    name: 'Дюбель металлический 5х30мм (500 шт/уп) ПожТехКабель PTK-Accessories (861-005)',
-    unit: 'шт',
-    quantity: 3000
-  }
-]
 
 const handlePdfCreate = (data) => {
   const doc = new jsPDF()
@@ -91,31 +77,28 @@ const handlePdfCreate = (data) => {
   doc.setFontSize(14)
   doc.text('Комплектность', 10, 20)
 
-  // Table
-  const startX = 10
-  const startY = 30
-  const cellHeight = 10
-
-  // Headers
-  doc.setFontSize(12)
-  doc.text('№', startX, startY)
-  doc.text('Наименование', startX + 20, startY)
-  doc.text('Ед. Изм.', startX + 120, startY)
-  doc.text('Кол-во', startX + 150, startY)
-
-  // Table data
-  data.forEach((row, index) => {
-    const y = startY + (index + 1) * cellHeight
-    doc.text(String(index + 1), startX, y)
-    doc.text(row.name, startX + 20, y)
-    doc.text(row.unit, startX + 120, y)
-    doc.text(String(row.quantity), startX + 150, y)
+  doc.autoTable({
+    startY: 30,
+    head: [['№', 'Наименование', 'Ед. изм.', 'Кол-во']],
+    body: data.map((row, index) => [index + 1, row.name, row.unit, row.quantity]),
+    didDrawCell: () => {
+      doc.setFont('TimesNewRoman')
+    },
+    styles: {
+      font: 'TimesNewRoman',
+      fontSize: 12
+    },
+    headStyles: {
+      font: 'TimesNewRoman',
+      fontSize: 12
+    }
   })
 
   // Contact info
-  const contactY = startY + (data.length + 1) * cellHeight + 10
-  doc.text('E-mail: support@layta.ru', startX, contactY)
-  doc.text('Тел.: 8 (800) 775-30-00', startX, contactY + 10)
+  const finalY = doc.lastAutoTable.finalY || 30
+  doc.setFontSize(12)
+  doc.text('E-mail: support@layta.ru', 10, finalY + 10)
+  doc.text('Тел.: 8 (800) 775-30-00', 10, finalY + 20)
 
   doc.save('output.pdf')
 }
@@ -128,16 +111,23 @@ const handlePdfCreate = (data) => {
     </div>
 
     <div class="sidebar__container">
-      <div v-if="!results.length" class="sidebar__info">
-        <p class="sidebar__subtitle">
-          Автоматический расчет начнется после указания всех соответствующих характеристик
-        </p>
-      </div>
-      <div v-else class="sidebar__info">
-        <p class="sidebar__subtitle">Если ДМОУ-1К/2К/1К-М</p>
-        <p class="sidebar__subtitle">Кол-во дюбелей = <span class="sidebar__value">2X*3</span></p>
-        <p class="sidebar__subtitle">Кол-во саморезов = <span class="sidebar__value">2X*3</span></p>
-      </div>
+      <!--
+      <template v-if="!results.value.length">
+        <div class="sidebar__info">
+          <p class="sidebar__subtitle">
+            Автоматический расчет начнется после указания всех соответствующих характеристик
+          </p>
+        </div>
+      </template>
+      <template v-else>
+        <div v-for="({ id, results }, index) in results.value" :key="id" class="sidebar__info">
+          <h3 class="sidebar__subtitle">Результаты для линии #{{ id }}</h3>
+          <p v-for="(result, key) in results" :key="key">
+            <strong>{{ key }}:</strong> <span class="sidebar__value">{{ result }}</span>
+          </p>
+        </div>
+      </template>
+      -->
     </div>
 
     <div class="sidebar__buttons">

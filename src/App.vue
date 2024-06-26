@@ -20,10 +20,6 @@ const handleBeforeUnload = () => {
   calcStore.saveCalcToLocalStorage()
 }
 
-const alertTest = () => {
-  alert('Обновление')
-}
-
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload)
 })
@@ -44,7 +40,6 @@ onBeforeUnmount(() => {
             :key="key"
             :id="key"
             :title="'Линия #' + key"
-            @updateResults="alertTest"
           />
         </TransitionGroup>
       </div>

@@ -1,12 +1,11 @@
 <script setup>
 import addIcon from '@/assets/icons/addicon.svg'
 import CableLine from '@/components/cable-group-line/CableLine.vue'
-import { useCalcStore } from '@/stores/calc'
 import { useToast } from 'primevue/usetoast'
 import { computed, watch } from 'vue'
 
 const props = defineProps({
-  calcId: Number,
+  calcData: Object,
   groupId: Number,
   title: String,
   selectedOkl: [String, Object]
@@ -14,13 +13,9 @@ const props = defineProps({
 
 const emits = defineEmits(['removeGroup'])
 
-const calcStore = useCalcStore()
-
 const initialCrossSection = 0
 
-const calc = computed(() => calcStore.calculator.get(props.calcId))
-
-const group = computed(() => calc.value.groups.find((group) => group.id === props.groupId))
+const group = computed(() => props.calcData.groups.find((group) => group.id === props.groupId))
 
 const groupElements = computed({
   get: () => group.value.elements,

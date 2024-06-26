@@ -4,11 +4,11 @@ import CableGroup from '@/components/cable-group/CableGroup.vue'
 import CalcType from '@/components/calc-type-line/CalcType.vue'
 import dowelTypes from '@/data/lists/dowelTypes.json'
 import fastenerTypes from '@/data/lists/fastenerTypes.json'
-import screwTypes from '@/data/lists/screwTypes.json'
 import types from '@/data/types/types.json'
 import { useCalcStore } from '@/stores/calc'
-import { computed, toRef, watch } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 
+// Getters (including not readonly)
 const props = defineProps({
   title: String,
   id: Number
@@ -18,7 +18,9 @@ const emits = defineEmits(['updateResults'])
 
 const calcStore = useCalcStore()
 
-const calc = computed(() => calcStore.calculator.get(props.id))
+const calc = computed(() => calcStore.getCalcById(props.id))
+
+const results = toRef(calc.value, 'results')
 
 const groups = toRef(calc.value, 'groups')
 
@@ -29,15 +31,12 @@ const selectedDowelType = computed(() => calcStore.getSelectedDowelType(props.id
 const selectedDowel = toRef(calc.value, 'selectedDowel')
 const selectedScrew = toRef(calc.value, 'selectedScrew')
 
+// Actions, getters
 const selectedSecondaryComponent = computed(() => {
   if (selectedOkl.value === 'ТГТ' || selectedOkl.value === 'ТГ FRHF') {
     return types.secondary
   }
   return null
-})
-
-const selectedMainTypeName = computed(() => {
-  return selectedOkl.value ? selectedOkl.value : 'Не выбран тип ОКЛ'
 })
 
 const handleTypeChange = (type, value) => {
@@ -54,6 +53,15 @@ watch(selectedSecondaryComponent, (newValue) => {
   if (newValue === null) {
     emits('updateResults')
     calcStore.setTypeValue(props.id, 'selectedBracket', null)
+  }
+})
+
+watch(selectedDowel, (newDowelCode) => {
+  const dowel = dowelTypes.find((d) => d.dowelCode === newDowelCode)
+  if (dowel) {
+    selectedScrew.value = dowel.screwCode
+  } else {
+    selectedScrew.value = null
   }
 })
 </script>
@@ -91,33 +99,39 @@ watch(selectedSecondaryComponent, (newValue) => {
         @change="handleTypeChange(selectedSecondaryComponent.name, $event)"
       />
 
-      <template v-if="selectedMontage === 'Стандартный'">
-        <CalcType
-          :calcId="props.id"
-          :title="'Тип крепежа'"
-          :typeClass="'calc-type--2'"
-          :radioButtons="fastenerTypes.elements"
-          :radioName="fastenerTypes.name"
-          :selectedValue="selectedDowelType"
-          @change="handleTypeChange(fastenerTypes.name, $event)"
-        />
+      <CalcType
+        v-if="selectedOkl === 'ОП' || selectedOkl === 'КК'"
+        :calcId="props.id"
+        :title="'Тип крепежа'"
+        :typeClass="'calc-type--1'"
+        :radioButtons="fastenerTypes.elements"
+        :radioName="fastenerTypes.name"
+        :selectedValue="selectedDowelType"
+        @change="handleTypeChange(fastenerTypes.name, $event)"
+      />
 
-        <div class="calc-type__select-container">
-          <select class="cable-line__select" v-model="selectedDowel">
-            <option disabled :value="null">Выберите тип дюбеля</option>
-            <option v-for="(option, id) in dowelTypes" :key="id" :value="option.code">
-              {{ option.title + ' ' + '(Код' + ' ' + option.code + ')' }}
-            </option>
-          </select>
+      <div v-if="selectedMontage === 'Стандартный'" class="calc-type__select-container">
+        <select class="cable-line__select" v-model="selectedDowel">
+          <option disabled :value="null">Выберите тип дюбеля</option>
+          <option v-for="(option, id) in dowelTypes" :key="id" :value="option.dowelCode">
+            {{ option.dowelTitle + ' ' + '(Код' + ' ' + option.dowelCode + ')' }}
+          </option>
+        </select>
 
-          <select class="cable-line__select" v-model="selectedScrew">
-            <option disabled :value="null">Выберите тип самореза</option>
-            <option v-for="(option, id) in screwTypes" :key="id" :value="option.code">
-              {{ option.title + ' ' + '(Код' + ' ' + option.code + ')' }}
-            </option>
-          </select>
-        </div>
-      </template>
+        <select class="cable-line__select" v-model="selectedScrew" :disabled="!selectedDowel">
+          <option disabled value="null">Тип самореза</option>
+          <option :value="selectedScrew">
+            {{
+              dowelTypes.find((screw) => screw.screwCode === selectedScrew)?.screwTitle +
+              ' ' +
+              '(Код' +
+              ' ' +
+              selectedScrew +
+              ')'
+            }}
+          </option>
+        </select>
+      </div>
     </div>
 
     <div class="calc-group-container">
@@ -125,9 +139,9 @@ watch(selectedSecondaryComponent, (newValue) => {
         v-for="(group, id) in groups"
         :key="group.id"
         :groupId="group.id"
-        :title="'Группа #' + (id + 1) + ' / ' + selectedMainTypeName"
+        :title="'Группа #' + (id + 1) + ' / ' + (selectedOkl ? selectedOkl : 'Не выбран тип ОКЛ')"
         :selectedOkl="selectedOkl"
-        :calcId="props.id"
+        :calcData="calc"
         @removeGroup="removeGroup(group.id)"
       />
     </div>

@@ -14,6 +14,7 @@
     "@primevue/themes": "^4.0.0-rc.1",
     "bin-packer": "^1.7.0",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "pinia": "^2.1.7",

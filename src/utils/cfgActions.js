@@ -1,12 +1,14 @@
 export const saveCfg = (calculatorsList, button) => {
-  const jsonString = JSON.stringify(calculatorsList, null, 2)
+  const timeDate = new Date()
+
+  const jsonString = JSON.stringify(Array.from(calculatorsList.entries()), null, 2)
 
   const blob = new Blob([jsonString], { type: 'application/json' })
 
   const url = URL.createObjectURL(blob)
 
   button.href = url
-  button.download = 'data.json'
+  button.download = `ПожТехКабель Конфигурация от ${timeDate.getDay()}.${timeDate.getMonth()}.${timeDate.getFullYear()}.json`
 }
 
 export const loadCfg = (file) => {
@@ -46,4 +48,27 @@ export const createHeaders = (keys) => {
   return result
 }
 
-export const createPdf = (calculatorsList) => {}
+// Пример данных
+export const exampleData = [
+  { name: 'КПСнг(А)-FRLS 1x2x0,75 (200м) ЭНТЭ', unit: 'м', quantity: 1000 },
+  {
+    name: 'Труба гофр. тяжелая самозатух. ТГТ СЗ ПВХ 16 мм с зондом (100 м) ПожТехКабель (710-001)',
+    unit: 'м',
+    quantity: 1000
+  },
+  {
+    name: 'Скоба металлическая однолапковая 16-17 мм (100 шт/уп) ПожТехКабель PTK-Accessories (850-004)',
+    unit: 'м',
+    quantity: 3000
+  },
+  {
+    name: 'Саморез 3,5x35 мм (1000 шт/уп) ПожТехКабель PTK-Accessories (860-005)',
+    unit: 'шт',
+    quantity: 3000
+  },
+  {
+    name: 'Дюбель металлический 5х30мм (500 шт/уп) ПожТехКабель PTK-Accessories (861-005)',
+    unit: 'шт',
+    quantity: 3000
+  }
+]

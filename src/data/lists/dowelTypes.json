@@ -1,14 +1,20 @@
 [
   {
-    "code": "М0000075301",
-    "title": "Дюбель"
+    "dowelCode": "М0000075301",
+    "dowelTitle": "Дюбель",
+    "screwCode": "М0000127001",
+    "screwTitle": "Саморез"
   },
   {
-    "code": "М0000075301",
-    "title": "Дюбель"
+    "dowelCode": "М0000075301",
+    "dowelTitle": "Дюбель",
+    "screwCode": "М0000200643",
+    "screwTitle": "Саморез"
   },
   {
-    "code": "М0000078001",
-    "title": "Дюбель"
+    "dowelCode": "М0000078001",
+    "dowelTitle": "Дюбель",
+    "screwCode": "М0000082393",
+    "screwTitle": "Саморез"
   }
 ]

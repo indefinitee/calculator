@@ -26,7 +26,7 @@ const getCalculator = () => {
 export const useCalcStore = defineStore('calc', () => {
   const calculator = ref(getCalculator())
 
-  const results = ref({})
+  const results = ref([])
 
   const nextId = computed(() => {
     if (calculator.value.size === 0) {
@@ -42,8 +42,16 @@ export const useCalcStore = defineStore('calc', () => {
     calculator.value.delete(id)
   }
 
+  const getCalcById = (id) => {
+    if (!calculator.value.has(id)) return
+
+    return calculator.value.get(id)
+  }
+
   const updateCalc = (calculatorList) => {
+    calculator.value = null
     calculator.value = calculatorList
+    clearLocalStorage()
   }
 
   const saveCalcToLocalStorage = () => {
@@ -54,6 +62,10 @@ export const useCalcStore = defineStore('calc', () => {
       )
     }
 
+    clearLocalStorage()
+  }
+
+  const clearLocalStorage = () => {
     localStorage.removeItem(CALC_LOCAL_STORAGE_KEY)
   }
 
@@ -62,7 +74,9 @@ export const useCalcStore = defineStore('calc', () => {
   }
 
   const clearCalc = () => {
+    calculator.value = null
     calculator.value = initializeStore()
+    clearLocalStorage()
   }
   const getPropertyValue = (id, propName) => {
     const calc = calculator.value.get(id)
@@ -75,20 +89,36 @@ export const useCalcStore = defineStore('calc', () => {
     if (calc) calc[type] = value
   }
 
+  const getCalcResults = (id) => {
+    const calc = getCalcById(id)
+    return calc ? calc.results : []
+  }
+
+  const updateCalcResults = (id, results) => {
+    const calc = getCalcById(id)
+    if (calc) {
+      calc.results = results
+    }
+  }
+
   return {
     calculator,
     results,
+    getSelectedOkl: (id) => getPropertyValue(id, 'selectedOkl'),
+    getSelectedMontage: (id) => getPropertyValue(id, 'selectedMontage'),
+    getSelectedBracket: (id) => getPropertyValue(id, 'selectedBracket'),
+    getSelectedDowelType: (id) => getPropertyValue(id, 'selectedDowelType'),
     calcLength,
     saveCalcToLocalStorage,
+    clearLocalStorage,
     nextId,
     removeCalc,
     clearCalc,
     addCalc,
     updateCalc,
-    getSelectedOkl: (id) => getPropertyValue(id, 'selectedOkl'),
-    getSelectedMontage: (id) => getPropertyValue(id, 'selectedMontage'),
-    getSelectedBracket: (id) => getPropertyValue(id, 'selectedBracket'),
-    getSelectedDowelType: (id) => getPropertyValue(id, 'selectedDowelType'),
+    getCalcById,
+    getCalcResults,
+    updateCalcResults,
     setTypeValue
   }
 })
