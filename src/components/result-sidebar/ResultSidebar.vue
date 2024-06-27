@@ -111,8 +111,7 @@ const handlePdfCreate = (data) => {
     </div>
 
     <div class="sidebar__container">
-      <!--
-      <template v-if="!results.value.length">
+      <template v-if="!results.length">
         <div class="sidebar__info">
           <p class="sidebar__subtitle">
             Автоматический расчет начнется после указания всех соответствующих характеристик
@@ -120,14 +119,13 @@ const handlePdfCreate = (data) => {
         </div>
       </template>
       <template v-else>
-        <div v-for="({ id, results }, index) in results.value" :key="id" class="sidebar__info">
-          <h3 class="sidebar__subtitle">Результаты для линии #{{ id }}</h3>
+        <div v-for="{ id, results } in results" :key="id" class="sidebar__info">
+          <p class="sidebar__subtitle">Для линии #{{ id }}</p>
           <p v-for="(result, key) in results" :key="key">
             <strong>{{ key }}:</strong> <span class="sidebar__value">{{ result }}</span>
           </p>
         </div>
       </template>
-      -->
     </div>
 
     <div class="sidebar__buttons">

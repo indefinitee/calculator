@@ -3,9 +3,13 @@ import {
   getInitialState,
   initializeStore
 } from '@/data/constants/initialState'
+import { getCcResults } from '@/utils/calcResults/cc'
+import { getOpResults } from '@/utils/calcResults/op'
+import { getTgtC3Results } from '@/utils/calcResults/tgt_c3'
+import { getTgtFrhfResults } from '@/utils/calcResults/tgt_frhf'
 import { isEmpty } from 'lodash'
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 
 const getCalculator = () => {
   const calculator = localStorage.getItem(CALC_LOCAL_STORAGE_KEY)
@@ -25,8 +29,6 @@ const getCalculator = () => {
 
 export const useCalcStore = defineStore('calc', () => {
   const calculator = ref(getCalculator())
-
-  const results = ref([])
 
   const nextId = computed(() => {
     if (calculator.value.size === 0) {
@@ -91,19 +93,45 @@ export const useCalcStore = defineStore('calc', () => {
 
   const getCalcResults = (id) => {
     const calc = getCalcById(id)
+
     return calc ? calc.results : []
   }
 
   const updateCalcResults = (id, results) => {
     const calc = getCalcById(id)
+
     if (calc) {
       calc.results = results
+    }
+  }
+  const updateGroupTotals = (calcId, groupId) => {
+    const calc = getCalcById(calcId)
+    const group = calc.groups.find((group) => group.id === groupId)
+
+    group.totalSection = group.elements.reduce((total, elem) => total + elem.section, 0)
+    group.totalLength = group.elements.reduce((total, elem) => total + elem.length, 0)
+  }
+
+  const changeCalcResults = async (calcId) => {
+    const calcData = getCalcById(calcId)
+    await nextTick()
+
+    if (!calcData.isCalculated) calcData.isCalculated = true
+
+    switch (calcData.selectedOkl) {
+      case 'ОП':
+        return getOpResults(calcData)
+      case 'КК':
+        return getCcResults(calcData)
+      case 'ТГТ СЗ':
+        return getTgtC3Results(calcData)
+      case 'ТГ FRHF':
+        return getTgtFrhfResults(calcData)
     }
   }
 
   return {
     calculator,
-    results,
     getSelectedOkl: (id) => getPropertyValue(id, 'selectedOkl'),
     getSelectedMontage: (id) => getPropertyValue(id, 'selectedMontage'),
     getSelectedBracket: (id) => getPropertyValue(id, 'selectedBracket'),
@@ -119,6 +147,8 @@ export const useCalcStore = defineStore('calc', () => {
     getCalcById,
     getCalcResults,
     updateCalcResults,
-    setTypeValue
+    setTypeValue,
+    updateGroupTotals,
+    changeCalcResults
   }
 })

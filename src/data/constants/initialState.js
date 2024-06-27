@@ -1,33 +1,4 @@
-export const initializeStore = () =>
-  new Map([
-    [
-      1,
-      {
-        selectedOkl: null,
-        selectedMontage: null,
-        selectedBracket: null,
-        selectedDowelType: null,
-        selectedDowel: null,
-        selectedScrew: null,
-        secondaryTypes: [],
-        groups: [
-          {
-            id: 1,
-            name: null,
-            totalSection: 0,
-            elements: [
-              {
-                id: 1,
-                section: 0,
-                length: 0
-              }
-            ]
-          }
-        ],
-        results: {}
-      }
-    ]
-  ])
+export const initializeStore = () => new Map([[1, getInitialState()]])
 export const getInitialState = () => ({
   selectedOkl: null,
   selectedMontage: null,
@@ -35,11 +6,10 @@ export const getInitialState = () => ({
   selectedDowelType: null,
   selectedDowel: null,
   selectedScrew: null,
-  secondaryTypes: [],
   groups: [
     {
       id: 1,
-      name: null,
+      totalLength: 0,
       totalSection: 0,
       elements: [
         {
@@ -50,7 +20,8 @@ export const getInitialState = () => ({
       ]
     }
   ],
-  results: {}
+  results: {},
+  isCalculated: false
 })
 
 export const CALC_LOCAL_STORAGE_KEY = 'calculator'

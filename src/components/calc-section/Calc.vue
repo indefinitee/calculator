@@ -6,21 +6,16 @@ import dowelTypes from '@/data/lists/dowelTypes.json'
 import fastenerTypes from '@/data/lists/fastenerTypes.json'
 import types from '@/data/types/types.json'
 import { useCalcStore } from '@/stores/calc'
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, toRef, watch } from 'vue'
 
-// Getters (including not readonly)
 const props = defineProps({
   title: String,
   id: Number
 })
 
-const emits = defineEmits(['updateResults'])
-
 const calcStore = useCalcStore()
 
 const calc = computed(() => calcStore.getCalcById(props.id))
-
-const results = toRef(calc.value, 'results')
 
 const groups = toRef(calc.value, 'groups')
 
@@ -31,27 +26,41 @@ const selectedDowelType = computed(() => calcStore.getSelectedDowelType(props.id
 const selectedDowel = toRef(calc.value, 'selectedDowel')
 const selectedScrew = toRef(calc.value, 'selectedScrew')
 
-// Actions, getters
 const selectedSecondaryComponent = computed(() => {
-  if (selectedOkl.value === 'ТГТ' || selectedOkl.value === 'ТГ FRHF') {
+  if (selectedOkl.value === 'ТГТ СЗ' || selectedOkl.value === 'ТГ FRHF') {
     return types.secondary
   }
   return null
 })
 
+const showDowelTypeComponent = computed(() => {
+  if (selectedOkl.value === 'ОП' && selectedMontage.value === 'Стандартный') {
+    return true
+  }
+
+  if (selectedOkl.value === 'КК' && selectedMontage.value === 'Стандартный') {
+    return true
+  }
+
+  return false
+})
+
 const handleTypeChange = (type, value) => {
   calcStore.setTypeValue(props.id, type, value)
+
+  handleResultsChange()
 }
 
 const removeGroup = (groupId) => {
-  if (groups.value.length > 1) {
-    groups.value = groups.value.filter((group) => group.id !== groupId)
+  const index = groups.value.findIndex((item) => item.id === groupId)
+
+  if (groups.value.length > 1 && index !== -1) {
+    groups.value.splice(index, 1)
   }
 }
 
 watch(selectedSecondaryComponent, (newValue) => {
   if (newValue === null) {
-    emits('updateResults')
     calcStore.setTypeValue(props.id, 'selectedBracket', null)
   }
 })
@@ -64,6 +73,8 @@ watch(selectedDowel, (newDowelCode) => {
     selectedScrew.value = null
   }
 })
+
+const handleResultsChange = () => calcStore.changeCalcResults(props.id)
 </script>
 
 <template>
@@ -100,7 +111,7 @@ watch(selectedDowel, (newDowelCode) => {
       />
 
       <CalcType
-        v-if="selectedOkl === 'ОП' || selectedOkl === 'КК'"
+        v-if="showDowelTypeComponent"
         :calcId="props.id"
         :title="'Тип крепежа'"
         :typeClass="'calc-type--1'"
@@ -136,13 +147,16 @@ watch(selectedDowel, (newDowelCode) => {
 
     <div class="calc-group-container">
       <CableGroup
-        v-for="(group, id) in groups"
+        v-for="(group, index) in groups"
         :key="group.id"
         :groupId="group.id"
-        :title="'Группа #' + (id + 1) + ' / ' + (selectedOkl ? selectedOkl : 'Не выбран тип ОКЛ')"
-        :selectedOkl="selectedOkl"
+        :title="
+          'Группа #' + (index + 1) + ' / ' + (selectedOkl ? selectedOkl : 'Не выбран тип ОКЛ')
+        "
         :calcData="calc"
+        :calcId="props.id"
         @removeGroup="removeGroup(group.id)"
+        @updateResults="handleResultsChange"
       />
     </div>
   </section>

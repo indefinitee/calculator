@@ -3,15 +3,20 @@ import addIcon from '@/assets/icons/addicon.svg'
 import CableLine from '@/components/cable-group-line/CableLine.vue'
 import { useToast } from 'primevue/usetoast'
 import { computed, watch } from 'vue'
+import { useCalcStore } from '@/stores/calc'
 
 const props = defineProps({
   calcData: Object,
+  calcId: Number,
   groupId: Number,
-  title: String,
-  selectedOkl: [String, Object]
+  title: String
 })
 
-const emits = defineEmits(['removeGroup'])
+const calcStore = useCalcStore()
+
+const emits = defineEmits(['removeGroup', 'updateResults'])
+
+const toast = useToast()
 
 const initialCrossSection = 0
 
@@ -31,22 +36,24 @@ const nextId = computed(() => {
   return groupElements.value[groupElements.value.length - 1].id + 1
 })
 
-const toast = useToast()
-
 const addLine = () => {
-  if (!props.selectedOkl) {
+  if (!props.calcData.selectedOkl || !props.calcData.selectedMontage) {
     return toast.add({
       severity: 'warn',
       summary: 'Предупреждение',
-      detail: 'Не выбран тип ОКЛ в линии',
+      detail: 'Выбраны не все параметры в линии',
       life: 1000
     })
   }
   groupElements.value.push({ id: nextId.value, section: initialCrossSection, length: 0 })
 }
 
-const removeLine = (id) => {
-  groupElements.value = groupElements.value.filter((line) => line.id !== id)
+const removeGroupLine = (id) => {
+  const index = groupElements.value.findIndex((item) => item.id === id)
+
+  groupElements.value.splice(index, 1)
+
+  if (props.calcData.isCalculated) emits('updateResults')
 
   if (groupElements.value.length === 0) {
     emits('removeGroup')
@@ -59,20 +66,20 @@ const updateSection = (id, section) => {
 }
 
 const updateLength = (id, length) => {
-  if (!length) return
-
   const line = groupElements.value.find((line) => line.id === id)
 
   if (line) line.length = length
+
+  emits('updateResults')
 }
 
-watch(groupElements, () => {
-  groupElements.value = group.value.elements
-})
-
-const totalSection = computed(() => {
-  return groupElements.value.reduce((total, line) => total + line.section, 0)
-})
+watch(
+  () => groupElements.value,
+  () => {
+    calcStore.updateGroupTotals(props.calcId, props.groupId)
+  },
+  { deep: true }
+)
 </script>
 
 <template>
@@ -89,7 +96,7 @@ const totalSection = computed(() => {
         </button>
       </div>
       <p class="cable-group__subtitle">
-        Суммарное сечение <span>{{ totalSection }} ММ</span>
+        Суммарное сечение <span>{{ group.totalSection }} ММ</span>
       </p>
     </div>
 
@@ -100,7 +107,7 @@ const totalSection = computed(() => {
         :key="line.id"
         :initialSection="line.section"
         :initialLength="line.length"
-        @remove="removeLine(line.id)"
+        @remove="removeGroupLine(line.id)"
         @updateSection="updateSection"
         @updateLength="updateLength"
       />

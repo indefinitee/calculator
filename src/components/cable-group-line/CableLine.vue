@@ -3,7 +3,7 @@ import removeIcon from '@/assets/icons/removeicon.svg'
 import cableTypes from '@/data/lists/cableTypes.json'
 import debounce from 'lodash.debounce'
 import { useToast } from 'primevue/usetoast'
-import { ref, watch, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const props = defineProps({
   id: Number,
@@ -19,40 +19,38 @@ const section = ref(props.initialSection)
 
 const length = ref(props.initialLength)
 
+watchEffect(() => {
+  length.value = props.initialLength
+  section.value = props.initialSection
+})
+
 const options = ref(cableTypes)
 
-watchEffect(() => {
-  section.value = props.initialSection
-  length.value = props.initialLength
-})
+const handleInputChange = debounce(() => {
+  if (typeof length.value !== 'number' || length.value < 0) {
+    length.value = 0
 
-watch(section, (newValue) => {
-  emits('updateSection', props.id, newValue)
-})
-
-const debouncedUpdateLength = debounce((newValue) => {
-  if (newValue > 0) {
-    emits('updateLength', props.id, newValue)
-  } else {
     toast.add({
       severity: 'warn',
       summary: 'Предупреждение',
-      detail: 'Укажите корректную длину линии',
+      detail: 'Некорректная длина линии',
       life: 1500
     })
   }
-}, 500) // задержка в 300 мс
 
-watch(length, (newValue) => {
-  debouncedUpdateLength(newValue)
-})
+  emits('updateLength', props.id, length.value)
+}, 500)
+
+const handleSelectChange = () => {
+  emits('updateSection', props.id, section.value)
+}
 </script>
 
 <template>
   <div class="cable-line">
     <div class="cable-line__info">
       <div class="cable-line__select-wrapper">
-        <select class="cable-line__select" v-model.number="section">
+        <select class="cable-line__select" v-model.number="section" @change="handleSelectChange">
           <option disabled :value="0">Выберите кабель</option>
           <option v-for="(option, id) in options" :key="id" :value="option.crossSection">
             {{ option.name + ' ' + '(сечение' + ' ' + option.crossSection + ' мм)' }}
@@ -64,11 +62,12 @@ watch(length, (newValue) => {
         <input
           type="number"
           min="0"
-          max="9999"
-          step="0.1"
+          step="1"
           pattern="[0-9]*"
           class="cable-line__input"
           v-model.number="length"
+          :disabled="section === 0"
+          @input="handleInputChange"
         />
         <span>м.</span>
       </label>
