@@ -1,17 +1,15 @@
-export const getTgtFrhfResults = (calcData) => {
+export const getTgtCzResults = (calcData) => {
   const totalCablesLength = calcData.groups.reduce((acc, group) => acc + group.totalLength, 0)
-  const totalCablesCount = calcData.groups.reduce((acc, group) => acc + group.elements.length, 0)
-  const totalGroupsCount = calcData.groups.length
 
   switch (calcData.selectedMontage) {
     case 'Прямой монтаж':
-      return getTgtFrhfDirectMontage(calcData, totalCablesLength)
+      return getTgtCzDirectMontage(calcData, totalCablesLength)
     case 'Стандартный':
-      return getTgtFrhfBaseMontage(calcData, totalCablesLength, totalCablesCount, totalGroupsCount)
+      return getTgtCzBaseMontage(calcData, totalCablesLength)
   }
 }
 
-const getTgtFrhfDirectMontage = (calcData, length) => {
+const getTgtCzDirectMontage = (calcData, length) => {
   if (calcData.selectedBracket === 'Однолапковая') {
     calcData.results = {
       'Количество кабеля': length,
@@ -33,7 +31,7 @@ const getTgtFrhfDirectMontage = (calcData, length) => {
   }
 }
 
-const getTgtFrhfBaseMontage = (calcData, length) => {
+const getTgtCzBaseMontage = (calcData, length) => {
   if (calcData.selectedBracket === 'Однолапковая') {
     calcData.results = {
       'Количество кабеля': length,

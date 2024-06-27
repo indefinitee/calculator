@@ -61,7 +61,7 @@ const removeGroup = (groupId) => {
 
 watch(selectedSecondaryComponent, (newValue) => {
   if (newValue === null) {
-    calcStore.setTypeValue(props.id, 'selectedBracket', null)
+    return calcStore.setTypeValue(props.id, 'selectedBracket', null)
   }
 })
 

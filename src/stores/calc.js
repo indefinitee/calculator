@@ -5,7 +5,7 @@ import {
 } from '@/data/constants/initialState'
 import { getCcResults } from '@/utils/calcResults/cc'
 import { getOpResults } from '@/utils/calcResults/op'
-import { getTgtC3Results } from '@/utils/calcResults/tgt_c3'
+import { getTgtCzResults } from '@/utils/calcResults/tgt_cz'
 import { getTgtFrhfResults } from '@/utils/calcResults/tgt_frhf'
 import { isEmpty } from 'lodash'
 import { defineStore } from 'pinia'
@@ -114,9 +114,8 @@ export const useCalcStore = defineStore('calc', () => {
 
   const changeCalcResults = async (calcId) => {
     const calcData = getCalcById(calcId)
-    await nextTick()
 
-    if (!calcData.isCalculated) calcData.isCalculated = true
+    await nextTick()
 
     switch (calcData.selectedOkl) {
       case 'ОП':
@@ -124,10 +123,12 @@ export const useCalcStore = defineStore('calc', () => {
       case 'КК':
         return getCcResults(calcData)
       case 'ТГТ СЗ':
-        return getTgtC3Results(calcData)
+        return getTgtCzResults(calcData)
       case 'ТГ FRHF':
         return getTgtFrhfResults(calcData)
     }
+
+    if (!calcData.isCalculated) calcData.isCalculated = true
   }
 
   return {
