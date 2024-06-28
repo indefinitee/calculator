@@ -8,7 +8,7 @@ export const saveCfg = (calculatorsList, button) => {
   const url = URL.createObjectURL(blob)
 
   button.href = url
-  button.download = `ПожТехКабель Конфигурация от ${timeDate.getDay()}.${timeDate.getMonth()}.${timeDate.getFullYear()}.json`
+  button.download = `ПожТехКабель Конфигурация от ${timeDate.toLocaleDateString()}.json`
 }
 
 export const loadCfg = (file) => {

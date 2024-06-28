@@ -66,6 +66,7 @@ const handleFileUpload = async (event) => {
 
 const handlePdfCreate = (data) => {
   const doc = new jsPDF()
+  const timeDate = new Date()
 
   doc.setFont('TimesNewRoman')
 
@@ -79,6 +80,7 @@ const handlePdfCreate = (data) => {
 
   doc.autoTable({
     startY: 30,
+    theme: 'grid',
     head: [['№', 'Наименование', 'Ед. изм.', 'Кол-во']],
     body: data.map((row, index) => [index + 1, row.name, row.unit, row.quantity]),
     didDrawCell: () => {
@@ -100,7 +102,7 @@ const handlePdfCreate = (data) => {
   doc.text('E-mail: support@layta.ru', 10, finalY + 10)
   doc.text('Тел.: 8 (800) 775-30-00', 10, finalY + 20)
 
-  doc.save('output.pdf')
+  doc.save(`ПожТехКабель. Итоговый расчет от ${timeDate.toLocaleDateString()}.pdf`)
 }
 </script>
 
