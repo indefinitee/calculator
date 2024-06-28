@@ -70,37 +70,49 @@ const handlePdfCreate = (data) => {
 
   doc.setFont('TimesNewRoman')
 
-  // Title
-  doc.setFontSize(18)
-  doc.text('Пожтехкабель PTK-Line', 10, 10)
-
-  // Subtitle
-  doc.setFontSize(14)
-  doc.text('Комплектность', 10, 20)
-
   doc.autoTable({
     startY: 30,
     theme: 'grid',
-    head: [['№', 'Наименование', 'Ед. изм.', 'Кол-во']],
+    head: [
+      [
+        { content: '', colSpan: 1 },
+        { content: 'ПожТехКабель РТК-Line', colSpan: 1 },
+        { content: 'E-mail: support@layta.ru', colSpan: 2 }
+      ],
+      [
+        { content: '', colSpan: 1 },
+        { content: 'Комплектность', colSpan: 1 },
+        { content: 'Тел.: 8 800 775 30 00', colSpan: 2 }
+      ],
+      ['№', 'Наименование', 'Ед. изм.', 'Кол-во']
+    ],
     body: data.map((row, index) => [index + 1, row.name, row.unit, row.quantity]),
     didDrawCell: () => {
       doc.setFont('TimesNewRoman')
     },
     styles: {
       font: 'TimesNewRoman',
-      fontSize: 12
+      fontSize: 10
     },
     headStyles: {
       font: 'TimesNewRoman',
-      fontSize: 12
-    }
+      fontSize: 12,
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      lineWidth: 0.5,
+      lineColor: [0, 0, 0],
+      fontStyle: 'bold',
+      halign: 'center'
+    },
+    bodyStyles: {
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+      lineWidth: 0.5,
+      lineColor: [0, 0, 0]
+    },
+    tableLineColor: [0, 0, 0],
+    tableLineWidth: 0.5
   })
-
-  // Contact info
-  const finalY = doc.lastAutoTable.finalY || 30
-  doc.setFontSize(12)
-  doc.text('E-mail: support@layta.ru', 10, finalY + 10)
-  doc.text('Тел.: 8 (800) 775-30-00', 10, finalY + 20)
 
   doc.save(`ПожТехКабель. Итоговый расчет от ${timeDate.toLocaleDateString()}.pdf`)
 }
