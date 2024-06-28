@@ -74,7 +74,9 @@ watch(selectedDowel, (newDowelCode) => {
   }
 })
 
-const handleResultsChange = () => calcStore.changeCalcResults(props.id)
+const handleResultsChange = () => {
+  calcStore.changeCalcResults(props.id)
+}
 </script>
 
 <template>

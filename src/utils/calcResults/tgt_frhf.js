@@ -5,16 +5,16 @@ export const getTgtFrhfResults = (calcData) => {
 
   switch (calcData.selectedMontage) {
     case 'Прямой монтаж':
-      return getTgtFrhfDirectMontage(calcData, totalCablesLength)
+      return getTgtFrhfDirectMontage(calcData, totalCablesLength, totalCablesCount)
     case 'Стандартный':
       return getTgtFrhfBaseMontage(calcData, totalCablesLength, totalCablesCount, totalGroupsCount)
   }
 }
 
-const getTgtFrhfDirectMontage = (calcData, length) => {
+const getTgtFrhfDirectMontage = (calcData, length, count) => {
   if (calcData.selectedBracket === 'Однолапковая') {
     calcData.results = {
-      'Количество кабеля': length,
+      'Количество кабеля': count,
       'Количество трубы': length,
       'Количество скоб': length * 3,
       'Гвозди Fedast': Math.ceil(length / 1000),
@@ -24,20 +24,24 @@ const getTgtFrhfDirectMontage = (calcData, length) => {
 
   if (calcData.selectedBracket === 'Двухлапковая') {
     calcData.results = {
-      'Количество кабеля': length,
+      'Количество кабеля': count,
       'Количество трубы': length,
       'Количество скоб': length * 3,
       'Гвозди Fedast': Math.ceil(length / 500),
       'Газ. баллон': Math.ceil(length / 500)
     }
   }
+
+  if (!calcData.selectedBracket) {
+    calcData.results = {}
+  }
 }
 
-const getTgtFrhfBaseMontage = (calcData, length) => {
+const getTgtFrhfBaseMontage = (calcData, length, count) => {
   if (calcData.selectedBracket === 'Однолапковая') {
     calcData.results = {
-      'Количество кабеля': length,
-      'Количество трубы': length,
+      'Количество кабеля': count,
+      'Количество трубы': count,
       'Количество скоб': length * 3,
       'Количество саморезов': length * 3,
       'Количество дюбелей': length * 3
@@ -46,11 +50,15 @@ const getTgtFrhfBaseMontage = (calcData, length) => {
 
   if (calcData.selectedBracket === 'Двухлапковая') {
     calcData.results = {
-      'Количество кабеля': length,
-      'Количество трубы': length,
+      'Количество кабеля': count,
+      'Количество трубы': count,
       'Количество скоб': length * 3,
       'Количество саморезов': length * 6,
       'Количество дюбелей': length * 6
     }
+  }
+
+  if (!calcData.selectedBracket) {
+    calcData.results = {}
   }
 }

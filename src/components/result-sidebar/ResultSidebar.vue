@@ -105,6 +105,7 @@ const handlePdfCreate = (data) => {
 </script>
 
 <template>
+  <app-confirm-popup></app-confirm-popup>
   <aside class="sidebar">
     <div>
       <h2 class="sidebar__title">Итого</h2>
@@ -131,7 +132,7 @@ const handlePdfCreate = (data) => {
     <div class="sidebar__buttons">
       <div class="sidebar__buttons-bottom">
         <a
-          @click="saveCfg(calcStore.calculator, $event.target)"
+          @click="saveCfg(calcStore.calculator, event.target)"
           class="btn sidebar__btn sidebar__btn--save"
           >Сохранить</a
         >
