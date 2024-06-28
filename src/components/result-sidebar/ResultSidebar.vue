@@ -121,8 +121,8 @@ const handlePdfCreate = (data) => {
       <template v-else>
         <div v-for="{ id, results } in results" :key="id" class="sidebar__info">
           <p class="sidebar__subtitle">Для линии #{{ id }}</p>
-          <p v-for="(result, key) in results" :key="key">
-            <strong>{{ key }}:</strong> <span class="sidebar__value">{{ result }}</span>
+          <p v-for="(result, key) in results" :key="key" class="sidebar__subtitle">
+            {{ key }}:<span class="sidebar__value">{{ result }}</span>
           </p>
         </div>
       </template>
