@@ -65,13 +65,23 @@ watch(selectedSecondaryComponent, (newValue) => {
   }
 })
 
-watch(selectedDowel, (newDowelCode) => {
-  const dowel = dowelTypes.find((d) => d.dowelCode === newDowelCode)
+watch(selectedScrew, (newDowelCode) => {
+  const dowel = dowelTypes.find((d) => d.screwCode === newDowelCode)
   if (dowel) {
-    selectedScrew.value = dowel.screwCode
+    selectedDowel.value = dowel.dowelCode
   } else {
-    selectedScrew.value = null
+    selectedDowel.value = null
   }
+})
+
+const dowelName = computed(() => {
+  if (selectedDowel.value) {
+    const dowel = dowelTypes.find((d) => d.dowelCode === selectedDowel.value)
+    if (dowel) {
+      return dowel.dowelTitle
+    }
+  }
+  return null
 })
 
 const handleResultsChange = () => {
@@ -124,24 +134,20 @@ const handleResultsChange = () => {
       />
 
       <div v-if="selectedMontage === 'Стандартный'" class="calc-type__select-container">
-        <select class="cable-line__select" v-model="selectedDowel">
-          <option disabled :value="null">Выберите тип дюбеля</option>
-          <option v-for="(option, id) in dowelTypes" :key="id" :value="option.dowelCode">
-            {{ option.dowelTitle + ' ' + '(Код' + ' ' + option.dowelCode + ')' }}
+        <select class="cable-line__select" v-model="selectedScrew">
+          <option disabled :value="null">Выберите тип самореза</option>
+          <option v-for="option in dowelTypes" :key="option.id" :value="option.screwCode">
+            {{ option.screwTitle + ' ' + '(Код' + ' ' + option.screwCode + ')' }}
           </option>
         </select>
 
-        <select class="cable-line__select" v-model="selectedScrew" :disabled="!selectedDowel">
-          <option disabled value="null">Тип самореза</option>
-          <option :value="selectedScrew">
-            {{
-              dowelTypes.find((screw) => screw.screwCode === selectedScrew)?.screwTitle +
-              ' ' +
-              '(Код' +
-              ' ' +
-              selectedScrew +
-              ')'
-            }}
+        <select class="cable-line__select" v-model="selectedDowel" :disabled="!selectedScrew">
+          <option v-if="!selectedDowel" disabled :value="null">
+            Тип дюбеля подбирается автоматически
+          </option>
+
+          <option v-else :value="selectedDowel">
+            {{ dowelName + ' ' + '(Код' + ' ' + selectedDowel + ')' }}
           </option>
         </select>
       </div>

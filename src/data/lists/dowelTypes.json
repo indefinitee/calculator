@@ -1,17 +1,20 @@
 [
   {
+    "id": 1,
     "dowelCode": "М0000075301",
     "dowelTitle": "Дюбель",
     "screwCode": "М0000127001",
     "screwTitle": "Саморез"
   },
   {
+    "id": 2,
     "dowelCode": "М0000075301",
     "dowelTitle": "Дюбель",
     "screwCode": "М0000200643",
     "screwTitle": "Саморез"
   },
   {
+    "id": 3,
     "dowelCode": "М0000078001",
     "dowelTitle": "Дюбель",
     "screwCode": "М0000082393",

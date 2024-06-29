@@ -119,7 +119,6 @@ const handlePdfCreate = (data) => {
 </script>
 
 <template>
-  <app-confirm-popup></app-confirm-popup>
   <aside class="sidebar">
     <div>
       <h2 class="sidebar__title">Итого</h2>
